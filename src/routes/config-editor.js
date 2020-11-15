@@ -14,32 +14,52 @@ routes.push({
       } else {
         this.$store.state.currentFile.ast.forEach(element => {
           if (element.type === 'Config') {
-            content.push(Vue.h('div', {}, [
-              Vue.h('span', {
+            const item = [
+              Vue.h('div', {
                 style: {
                   color: 'darkcyan'
                 }
               }, element.name),
-              Vue.h('span', {}, ' → '),
-              Vue.h('span', {
-                style: {
-                  color: 'orange'
-                }
-              }, JSON.stringify(element.value))
-            ]))
-          } else {
-            content.push(Vue.h('div', {}, [
-              Vue.h('span', {
-                style: {
-                  color: '#fff'
-                }
-              }, JSON.stringify(element))
-            ]))
+              Vue.h('div', { class: 'spacer' })
+            ]
+            console.log(element);
+            if (element.value.type === 'Bool') {
+              item.push(Vue.h('div', {
+                class: { com: true, active: element.value.value }
+              }, '是'))
+              item.push(Vue.h('div', {
+                class: { com: true, active: !element.value.value }
+              }, '否'))
+            } else if (element.value.type === 'Str') {
+              item.push(Vue.h('div', {
+                class: { com: true }
+              }, element.value.value.toString()))
+            } else if (element.value.type === 'Array') {
+              for (let i = 0; i < element.value.value.length; i++) {
+                item.push(Vue.h('div', {
+                  class: { com: true }
+                }, element.value.value[i].value))
+              }
+            } else if (element.value.type === 'Int') {
+              item.push(Vue.h('div', {
+                class: { com: true }
+              }, element.value.value))
+            }
+            content.push(Vue.h('div', { class: 'config' }, item))
           }
+          // else {
+          //   content.push(Vue.h('div', {}, [
+          //     Vue.h('div', {
+          //       style: {
+          //         color: '#fff'
+          //       }
+          //     }, JSON.stringify(element))
+          //   ]))
+          // }
         })
       }
       return Vue.h('main', {
-        class: 'editor'
+        class: 'config-editor'
       }, [
         Vue.h('div', {
           class: 'title-bar'

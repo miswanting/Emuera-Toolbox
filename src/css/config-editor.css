@@ -1,0 +1,52 @@
+.config-editor {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+.config-editor .spacer {
+  flex-grow: 1;
+}
+.config-editor .title-bar {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.config-editor .title {
+  cursor: pointer;
+}
+.config-editor .title:hover {
+  background-color: var(--f);
+}
+.config-editor .encoding {
+  font-size: x-small;
+  background-color: var(--h);
+  padding: 0.1rem;
+}
+.config-editor .container {
+  flex-grow: 1;
+  margin: 0.5rem;
+  background-color: var(--c);
+  overflow-y: auto;
+  outline: none;
+}
+.config-editor .config {
+  display: flex;
+}
+.config-editor .config:hover {
+  display: flex;
+  background-color: var(--d);
+}
+.config-editor .com {
+  padding: 0 0.5rem;
+  background-color: var(--e);
+}
+.config-editor .com:hover {
+  background-color: var(--f);
+}
+.config-editor .com.active {
+  color: var(--d);
+  background-color: var(--o);
+}
