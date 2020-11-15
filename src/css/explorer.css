@@ -1,0 +1,81 @@
+.explorer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+.explorer abbr {
+  text-decoration: none;
+}
+.explorer .title-bar {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.explorer .title-bar .path-item {
+  cursor: pointer;
+}
+.explorer .title-bar .path-item:hover {
+  background-color: var(--f);
+}
+.explorer .title {
+  cursor: pointer;
+}
+.explorer .title:hover {
+  background-color: var(--f);
+}
+.explorer i {
+  cursor: pointer;
+}
+.explorer i:hover {
+  background-color: var(--f);
+}
+.explorer .content {
+  flex-grow: 1;
+  margin: 0.5rem;
+  background-color: var(--c);
+  overflow-y: auto;
+}
+.explorer .content > div {
+  background-color: var(--e);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.explorer .content > div:hover {
+  background-color: var(--f);
+}
+.explorer .content svg {
+  margin: 0 0.3rem;
+}
+.explorer .content .file-description {
+  font-size: x-small;
+  background-color: var(--h);
+  padding: 0.1rem;
+  margin: 0 0.3rem;
+}
+.explorer .content .encoding {
+  font-size: x-small;
+  background-color: var(--h);
+  padding: 0.1rem;
+  margin: 0 0.3rem;
+}
+.explorer .spacer {
+  flex-grow: 1;
+}
+.explorer .content .loading-status {
+  font-size: x-small;
+  color: var(--h);
+}
+.explorer .content i {
+  padding: 0.1rem;
+  margin: 0 0.3rem;
+}
+.explorer .status {
+  font-size: x-small;
+  align-self: center;
+  color: var(--h);
+}

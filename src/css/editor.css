@@ -1,0 +1,34 @@
+.editor {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+.editor .spacer {
+  flex-grow: 1;
+}
+.editor .title-bar {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.editor .title {
+  cursor: pointer;
+}
+.editor .title:hover {
+  background-color: var(--f);
+}
+.editor .encoding {
+  font-size: x-small;
+  background-color: var(--h);
+  padding: 0.1rem;
+}
+.editor .container {
+  flex-grow: 1;
+  margin: 0.5rem;
+  background-color: var(--c);
+  overflow-y: auto;
+  outline: none;
+}

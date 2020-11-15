@@ -1,0 +1,54 @@
+{
+  "name": "emuera-toolbox",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "setup": "npm i",
+    "debug": "chcp 65001 && npx electron .",
+    "check": "npx standard && npx standard --plugin html './**/*.html'",
+    "fix": "npx standard --fix && npx standard --fix --plugin html './**/*.html'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miswanting/Emuera-Toolbox.git"
+  },
+  "author": "Miswanting",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/miswanting/Emuera-Toolbox/issues"
+  },
+  "homepage": "https://github.com/miswanting/Emuera-Toolbox#readme",
+  "devDependencies": {
+    "electron": "latest",
+    "electron-builder": "latest",
+    "eslint-plugin-html": "latest",
+    "standard": "latest"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "chardet": "latest",
+    "electron-is-dev": "latest",
+    "iconv-lite": "latest",
+    "monaco-editor": "latest",
+    "normalize.css": "latest",
+    "pegjs": "latest",
+    "vue": "next",
+    "vue-router": "next",
+    "vuex": "next"
+  },
+  "standard": {
+    "globals": [
+      "Vue",
+      "VueRouter",
+      "Vuex",
+      "app",
+      "routes",
+      "components",
+      "store",
+      "router",
+      "addEventListener"
+    ]
+  }
+}

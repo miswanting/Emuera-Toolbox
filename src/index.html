@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emuera Toolbox</title>
+  <style>
+    @font-face {
+      font-family: "Microsoft YaHei";
+      src: local("Microsoft YaHei");
+    }
+
+    html {
+      font-family: "Microsoft YaHei";
+    }
+  </style>
+  <link href="../node_modules/normalize.css/normalize.css" rel="stylesheet">
+  <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="./css/reset.css" rel="stylesheet">
+  <link href="./css/theme.css" rel="stylesheet">
+  <link href="./css/idle.css" rel="stylesheet">
+  <link href="./css/explorer.css" rel="stylesheet">
+  <link href="./css/editor.css" rel="stylesheet">
+  <script>
+    window.routes = new Array()
+    window.components = new Array()
+    let nodeRequire = global.require
+  </script>
+  <script src="../node_modules/vue/dist/vue.global.js"></script>
+  <script src="../node_modules/vue-router/dist/vue-router.global.js"></script>
+  <script src="../node_modules/vuex/dist/vuex.global.js"></script>
+  <script src="../node_modules/monaco-editor/dev/vs/loader.js"></script>
+  <script>
+    let monacoRequire = global.require
+    global.require = nodeRequire
+  </script>
+  <script src="./routes/idle.js"></script>
+  <script src="./routes/explorer.js"></script>
+  <script src="./routes/config-editor.js"></script>
+  <script src="./routes/csv-editor.js"></script>
+  <script src="./routes/erh-editor.js"></script>
+  <script src="./routes/erb-editor.js"></script>
+  <script src="./renderer.js"></script>
+</head>
+
+<body>
+
+</body>
+
+</html>

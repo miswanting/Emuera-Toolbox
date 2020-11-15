@@ -1,0 +1,13 @@
+.idle {
+  height: 100vh;
+  display: flex;
+}
+.idle > div {
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+}
+.idle .msg {
+  color: var(--l);
+  font-size: small;
+}
