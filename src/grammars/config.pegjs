@@ -14,14 +14,14 @@ Comment
 Config
 = [ \t]* name:[^: \n\t\r]+ [ \t]* ':' [ \t]* value:Value [ \t]* [\r?\n]? { return { type:'Config', name:name.join(''), value: value } }
 Value
-= 'yes'i { return { type: 'bool', value: true } }
-/ 'no'i [^a-z]i { return { type: 'bool', value: false } }
-/ Array
+= 'yes'i { return { type: 'Bool', value: true } }
+/ 'no'i [^a-z]i { return { type: 'Bool', value: false } }
+/ array:Array { return { type: 'Array', value:array } }
 / Interger
-/ [^,\n\r]+ { return { type: 'str', value: text() } }
-/ '' { return { type: 'null', value: null } }
+/ [^,\n\r]+ { return { type: 'Str', value: text() } }
+/ '' { return { type: 'Null', value: null } }
 Interger
-= [0-9]+ { return { type: 'int', value: parseInt(text()) } }
+= [0-9]+ { return { type: 'Int', value: parseInt(text()) } }
 Array
-= now:Interger ',' next:Array { return [now, ...next] }
-/ now:Interger [^,] { return [now] }
+= now:Interger next:(',' Interger)+ { return [now, ...next.map(n=>{return n[1]})] }
+// now:Interger [^,] { return [now] }
