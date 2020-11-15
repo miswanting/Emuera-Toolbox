@@ -8,7 +8,7 @@
     "debug": "chcp 65001 && npx electron .",
     "check": "npx standard && npx standard --plugin html './**/*.html'",
     "fix": "npx standard --fix && npx standard --fix --plugin html './**/*.html'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx electron-builder --dir"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "standard": "latest"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@fortawesome/fontawesome-free": "latest",
     "chardet": "latest",
     "electron-is-dev": "latest",
     "iconv-lite": "latest",
@@ -50,5 +50,12 @@
       "router",
       "addEventListener"
     ]
+  },
+  "build": {
+    "appId": "net.erajs.toolbox",
+    "productName": "Emuera Toolbox",
+    "directories": {
+      "output": "dist"
+    }
   }
 }

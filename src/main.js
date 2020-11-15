@@ -162,7 +162,12 @@ function scanRootFolder(exePath) {
     return fileLists
   }
   const fileList = getFileList(structure, [])
-  const encodingWorker = new Worker('./src/workers/encoding.js')
+  let encodingWorker
+  if (existsSync('./src/workers/encoding.js')) {
+    encodingWorker = new Worker('./src/workers/encoding.js')
+  } else {
+    encodingWorker = new Worker('./resources/app.asar/src/workers/encoding.js')
+  }
   encodingWorker.postMessage({
     type: 'caculate-encoding',
     data: {
