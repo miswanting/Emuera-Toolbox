@@ -47,15 +47,6 @@ routes.push({
             }
             content.push(Vue.h('div', { class: 'config' }, item))
           }
-          // else {
-          //   content.push(Vue.h('div', {}, [
-          //     Vue.h('div', {
-          //       style: {
-          //         color: '#fff'
-          //       }
-          //     }, JSON.stringify(element))
-          //   ]))
-          // }
         })
       }
       return Vue.h('main', {
@@ -69,7 +60,8 @@ routes.push({
           Vue.h('div', { class: 'file-name' }, this.$store.state.currentFile.name),
           Vue.h('div', { innerHTML: '&emsp;' }),
           Vue.h('div', { class: 'encoding' }, this.$store.state.currentFile.encoding),
-          Vue.h('div', { class: 'spacer' })
+          Vue.h('div', { class: 'spacer' }),
+          Vue.h('abbr', { title: 'New File.' }, Vue.h('i', { class: 'fas fa-floppy-o fa-xs fa-fw' }))
         ]),
         Vue.h('div', {
           class: 'container',
