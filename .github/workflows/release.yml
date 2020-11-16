@@ -19,11 +19,12 @@ jobs:
         with:
           node-version: "14"
 
-      - name: Get Current Tag
-        id: iTag
-        shell: bash
+      - name: Get Info
+        id: info
         run: |
-          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+          $date = Get-Date -Format "yyMMdd"
+          echo ::set-output name=DATE::$date
+          echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
       - name: Prebuild Emuera Toolbox
         run: |
@@ -32,13 +33,8 @@ jobs:
           npx electron-builder --dir
 
       - name: Assemble Archive
-        env:
-          VERSION: ${{ steps.iTag.outputs.VERSION }}
         run: |
-          $date = Get-Date -Format "yyMMdd"
-          echo "::set-env name=RELEASE_DATE::$date"
-          echo "::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}"
-          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+$date.windows-x64.zip" -CompressionLevel Optimal
+          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip" -CompressionLevel Optimal
 
       - name: Create Release
         id: create_release
@@ -46,8 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.iTag.outputs.VERSION }}
-          release_name: Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}
+          tag_name: ${{ steps.info.outputs.TAG_NAME }}
+          release_name: Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}
           body_path: Emuera-Toolbox\CHANGELOG.md
           draft: true
           prerelease: false
@@ -58,6 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}.windows-x64.zip"
-          asset_name: "Emuera-Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}.windows-x64.zip"
+          asset_path: "Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
+          asset_name: "Emuera-Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
           asset_content_type: application/zip
