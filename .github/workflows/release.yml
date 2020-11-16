@@ -1,0 +1,56 @@
+name: Release Bot
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  Windows-x64:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Emuera Toolbox
+        uses: actions/checkout@v2
+        with:
+          path: Emuera-Toolbox
+
+      - name: Setup Node.js Enviroment
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "14"
+
+      - name: Prebuild Emuera Toolbox
+        run: |
+          cd Emuera-Toolbox
+          npm run setup
+          npx electron-builder --dir
+
+      - name: Assemble SDK
+        run: |
+          $date = Get-Date -Format "yyMMdd"
+          echo "::set-env name=RELEASE_DATE::$date"
+          echo "::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}"
+          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera-Toolbox-v$date.x64.zip" -CompressionLevel Optimal
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.RELEASE_DATE }}
+          release_name: Emuera Toolbox v${{ env.RELEASE_DATE }}
+          body_path: Emuera-Toolbox\CHANGELOG.md
+          draft: true
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "Emuera-Toolbox-v${{ env.RELEASE_DATE }}.x64.zip"
+          asset_name: "Emuera-Toolbox-v${{ env.RELEASE_DATE }}.x64.zip"
+          asset_content_type: application/zip

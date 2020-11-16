@@ -31,6 +31,7 @@
     "chardet": "latest",
     "electron-is-dev": "latest",
     "iconv-lite": "latest",
+    "iso-639-1": "latest",
     "monaco-editor": "latest",
     "normalize.css": "latest",
     "pegjs": "latest",
@@ -54,6 +55,7 @@
   "build": {
     "appId": "net.erajs.toolbox",
     "productName": "Emuera Toolbox",
+    "asar": false,
     "directories": {
       "output": "dist"
     }

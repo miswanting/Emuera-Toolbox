@@ -166,7 +166,7 @@ function scanRootFolder(exePath) {
   if (existsSync('./src/workers/encoding.js')) {
     encodingWorker = new Worker('./src/workers/encoding.js')
   } else {
-    encodingWorker = new Worker('./resources/app.asar/src/workers/encoding.js')
+    encodingWorker = new Worker('./resources/app/src/workers/encoding.js')
   }
   encodingWorker.postMessage({
     type: 'caculate-encoding',
@@ -204,9 +204,12 @@ function scanRootFolder(exePath) {
       }
       const content = decode(f, encoding)
       e.reply('open-file', content)
-      const pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
+      let pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
       if (existsSync(pegFilePath)) {
         const configParser = peg.generate(decode(readFileSync(pegFilePath), 'UTF-8'))
+        e.reply('update-file-ast', configParser.parse(content))
+      } else if (existsSync(`./resources/app/src/grammars/${ext.slice(1, ext.length)}.pegjs`)) {
+        const configParser = peg.generate(decode(readFileSync(`./resources/app/src/grammars/${ext.slice(1, ext.length)}.pegjs`), 'UTF-8'))
         e.reply('update-file-ast', configParser.parse(content))
       }
     }
