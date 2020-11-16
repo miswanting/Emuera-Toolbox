@@ -2,13 +2,12 @@ name: Release Bot
 
 on:
   push:
-    branches: [main]
     tags: [v*]
 
 jobs:
   Windows-x64:
     runs-on: windows-latest
-
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
