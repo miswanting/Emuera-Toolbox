@@ -20,10 +20,10 @@ jobs:
           node-version: "14"
 
       - name: Get Date
-        id: info
+        id: date
         run: |
-          $date = Get-Date -Format "yyMMdd"
-          echo ::set-output name=DATE::$date
+          date=`date +%Y%m%d`
+          echo ::set-output name=DATE::${date:2:4}
 
       - name: Get Tag
         id: tag
@@ -39,7 +39,7 @@ jobs:
 
       - name: Assemble Archive
         run: |
-          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip" -CompressionLevel Optimal
+          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.date.outputs.DATE }}.windows-x64.zip" -CompressionLevel Optimal
 
       - name: Create Release
         id: create_release
@@ -48,7 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          release_name: Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}
+          release_name: Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.date.outputs.DATE }}
           body_path: Emuera-Toolbox\CHANGELOG.md
           draft: true
           prerelease: false
@@ -59,6 +59,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
-          asset_name: "Emuera-Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
+          asset_path: "Emuera Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.date.outputs.DATE }}.windows-x64.zip"
+          asset_name: "Emuera-Toolbox ${{ steps.tag.outputs.TAG_NAME }}+${{ steps.date.outputs.DATE }}.windows-x64.zip"
           asset_content_type: application/zip
