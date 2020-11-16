@@ -2,14 +2,21 @@ name: Release Bot
 
 on:
   push:
-    - branches: [main]
-    - tags: [v*]
+    tags: [v*]
 
 jobs:
   Windows-x64:
     runs-on: windows-latest
-    if: github.ref == 'refs/heads/main'
     steps:
+      - name: Get Build Info
+        id: info
+        shell: bash
+        run: |
+          d=`date +%Y%m%d`
+          echo ::set-output name=DATE::${d:2:6}
+          echo ::set-output name=BRANCH_NAME::${GITHUB_REF/refs\/heads\//}
+          echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
+
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -20,19 +27,12 @@ jobs:
         with:
           node-version: "14"
 
-      - name: Get Build Info
-        id: info
-        shell: bash
-        run: |
-          d=`date +%Y%m%d`
-          echo ::set-output name=DATE::${d:2:6}
-          echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
-
       - name: Build Electron Program
         run: |
           cd Emuera-Toolbox
           npm run setup
           npx electron-builder --dir
+          echo ${{ steps.info.outputs.BRANCH_NAME }}
 
       - name: Assemble Archive
         run: |
