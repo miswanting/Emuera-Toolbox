@@ -21,9 +21,10 @@ jobs:
 
       - name: Get Date
         id: date
+        shell: bash
         run: |
-          date=`date +%Y%m%d`
-          echo ::set-output name=DATE::${date:2:4}
+          d=`date +%Y%m%d`
+          echo ::set-output name=DATE::${d:2:4}
 
       - name: Get Tag
         id: tag
