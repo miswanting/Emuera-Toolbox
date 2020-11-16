@@ -27,6 +27,7 @@ jobs:
 
       - name: Get Tag
         id: tag
+        shell: bash
         run: |
           echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
