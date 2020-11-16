@@ -46,8 +46,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.RELEASE_DATE }}
-          release_name: Emuera Toolbox v${{ env.RELEASE_DATE }}
+          tag_name: ${{ steps.iTag.outputs.VERSION }}
+          release_name: Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}
           body_path: Emuera-Toolbox\CHANGELOG.md
           draft: true
           prerelease: false
@@ -59,5 +59,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}.windows-x64.zip"
-          asset_name: "Emuera Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}.windows-x64.zip"
+          asset_name: "Emuera-Toolbox ${{ steps.iTag.outputs.VERSION }}+${{ env.RELEASE_DATE }}.windows-x64.zip"
           asset_content_type: application/zip
