@@ -7,6 +7,7 @@ on:
 jobs:
   Windows-x64:
     runs-on: windows-latest
+
     steps:
       - name: Get Build Info
         id: info
@@ -14,7 +15,6 @@ jobs:
         run: |
           d=`date +%Y%m%d`
           echo ::set-output name=DATE::${d:2:6}
-          echo ::set-output name=BRANCH_NAME::${GITHUB_REF/refs\/heads\//}
           echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
 
       - name: Checkout Repository
@@ -32,7 +32,6 @@ jobs:
           cd Emuera-Toolbox
           npm run setup
           npx electron-builder --dir
-          echo ${{ steps.info.outputs.BRANCH_NAME }}
 
       - name: Assemble Archive
         run: |
