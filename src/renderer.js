@@ -1,19 +1,3 @@
-window.store = Vuex.createStore({
-  state() {
-    return {
-      currentPath: [],
-      folderStructure: {},
-      currentFile: {
-        content: null,
-        ast: null
-      }
-    }
-  }
-})
-window.router = VueRouter.createRouter({
-  history: VueRouter.createWebHashHistory(),
-  routes
-})
 addEventListener('load', function () {
   window.app = Vue.createApp({
     template: '<router-view></router-view>'

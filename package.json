@@ -37,7 +37,8 @@
     "pegjs": "latest",
     "vue": "next",
     "vue-router": "next",
-    "vuex": "next"
+    "vuex": "next",
+    "y18n": "latest"
   },
   "standard": {
     "globals": [

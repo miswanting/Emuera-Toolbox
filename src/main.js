@@ -5,9 +5,7 @@ const { dirname, join, extname } = require('path')
 const { analyse } = require('chardet')
 const peg = require('pegjs')
 const { execFileSync } = require('child_process')
-const {
-  Worker, isMainThread, parentPort, workerData
-} = require('worker_threads')
+const { Worker } = require('worker_threads')
 const isDev = require('electron-is-dev')
 let win
 function createWindow() {
@@ -67,7 +65,25 @@ function createWindow() {
             accelerator: 'CmdOrCtrl+Shift+S'
           },
           { type: 'separator' },
-          { label: 'Import' },
+          {
+            label: 'Import',
+            click: async () => {
+              const b = win.getBounds()
+              const view = new BrowserWindow({
+                show: false,
+                x: b.x - 300,
+                y: b.y,
+                width: 300,
+                height: 600,
+                parent: win,
+                webPreferences: {
+                  nodeIntegration: true
+                }
+              })
+              view.loadFile('src/help/index.html')
+              view.once('ready-to-show', view.show)
+            }
+          },
           { label: 'Export' },
           { type: 'separator' },
           { role: 'close' }
@@ -81,14 +97,45 @@ function createWindow() {
         submenu: [
           {
             label: 'Help',
-            accelerator: 'F1'
+            accelerator: 'F1',
+            click: async () => {
+              const b = win.getBounds()
+              const view = new BrowserWindow({
+                show: false,
+                x: b.x + b.width,
+                y: b.y,
+                width: 300,
+                height: 600,
+                parent: win,
+                webPreferences: {
+                  nodeIntegration: true
+                }
+              })
+              view.loadFile('src/help/index.html')
+              view.once('ready-to-show', view.show)
+            }
           },
           { type: 'separator' },
           { label: 'Tutorials' },
           { label: 'Documentation' },
           { type: 'separator' },
           { label: 'Check Updates' },
-          { label: 'About' }
+          {
+            label: 'About',
+            click: async () => {
+              const view = new BrowserWindow({
+                show: false,
+                width: 400,
+                height: 300,
+                parent: win,
+                webPreferences: {
+                  nodeIntegration: true
+                }
+              })
+              view.loadFile('src/help/index.html')
+              view.once('ready-to-show', view.show)
+            }
+          }
         ]
       }
     ])
