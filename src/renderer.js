@@ -47,3 +47,6 @@ function handleConfig() {
     autoLoadDict()
   }
 }
+function autoLoadDict() {
+  require('electron').ipcRenderer.send('auto-load-dict')
+}

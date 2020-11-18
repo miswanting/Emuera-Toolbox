@@ -102,7 +102,9 @@ routes.push({
           pathMenu,
           Vue.h('div', { class: 'spacer' }),
           Vue.h('abbr', { title: 'New File.' }, Vue.h('i', { class: 'fas fa-file-medical fa-xs fa-fw' })),
-          Vue.h('abbr', { title: 'New Folder.' }, Vue.h('i', { class: 'fas fa-folder-plus fa-xs fa-fw' }))
+          Vue.h('abbr', { title: 'New Folder.' }, Vue.h('i', { class: 'fas fa-folder-plus fa-xs fa-fw' })),
+          Vue.h('abbr', { title: 'New Dict.' }, Vue.h('i', { class: 'fas fa-book-medical fa-xs fa-fw' })),
+          Vue.h('abbr', { title: 'Convert All SHIFT_JIS File To UTF-8.' }, Vue.h('i', { class: 'fas fa-recycle fa-xs fa-fw' }))
         ]),
         Vue.h('div', {
           class: 'content'

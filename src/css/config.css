@@ -30,3 +30,28 @@
   overflow-y: auto;
   outline: none;
 }
+.config .config-item {
+  display: flex;
+}
+.config .config-item:hover {
+  background-color: var(--e);
+}
+.config .config-item:active {
+  background-color: var(--f);
+}
+.config .btn {
+  cursor: pointer;
+  background-color: var(--e);
+  padding: 0 0.5rem;
+}
+.config .btn:hover {
+  background-color: var(--f);
+}
+.config .btn:active {
+  color: var(--d);
+  background-color: var(--p);
+}
+.config .btn.active {
+  color: var(--d);
+  background-color: var(--o);
+}
