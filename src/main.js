@@ -260,7 +260,7 @@ function scanRootFolder(exePath) {
       }
       const content = decode(f, encoding)
       e.reply('open-file', content)
-      let pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
+      const pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
       if (existsSync(pegFilePath)) {
         const configParser = peg.generate(decode(readFileSync(pegFilePath), 'UTF-8'))
         e.reply('update-file-ast', configParser.parse(content))

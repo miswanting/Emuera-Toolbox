@@ -2,31 +2,31 @@ routes.push({
   path: '/explorer',
   component: {
     methods: {
-      enterNewPath(pathList) {
+      enterNewPath (pathList) {
         this.$store.state.currentPath = pathList
       },
-      entryClick(entry) {
+      entryClick (entry) {
         if (entry.type === 'folder') {
           this.$store.state.currentPath.push(entry.name)
         } else if (entry.type === 'file') {
           this.$store.state.currentFile = entry
           this.$store.state.currentFile.content = ''
           require('electron').ipcRenderer.send('open-file', { path: entry.path, encoding: entry.encoding })
-          console.log(entry);
+          console.log(entry)
           if (entry.ext === '.config') {
-            router.push('/config-editor')
+            router.push('/editor/config')
           } else if (entry.ext === '.csv') {
-            router.push('/csv-editor')
+            router.push('/editor/csv')
           } else if (entry.ext === '.erh') {
-            router.push('/erh-editor')
+            router.push('/editor/erh')
           } else if (entry.ext === '.erb') {
-            router.push('/erb-editor')
+            router.push('/editor/erb')
           }
         }
       }
     },
-    render() {
-      function getFolderEntries(path, structure) {
+    render () {
+      function getFolderEntries (path, structure) {
         if (path.length === 0) {
           return structure
         }

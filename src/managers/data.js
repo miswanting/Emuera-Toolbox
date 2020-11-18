@@ -1,5 +1,5 @@
 window.store = Vuex.createStore({
-  state() {
+  state () {
     return {
       currentPath: [],
       folderStructure: {},
