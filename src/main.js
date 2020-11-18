@@ -86,6 +86,15 @@ function createWindow() {
           },
           { label: 'Export' },
           { type: 'separator' },
+          {
+            label: 'Config',
+            click: async () => {
+              win.webContents.send('enter-route', {
+                value: '/config'
+              })
+            }
+          },
+          { type: 'separator' },
           { role: 'close' }
         ]
       },

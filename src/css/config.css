@@ -1,0 +1,32 @@
+.config {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+.config abbr {
+  text-decoration: none;
+}
+.config .spacer {
+  flex-grow: 1;
+}
+.config .title-bar {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.config .title {
+  cursor: pointer;
+}
+.config .title:hover {
+  background-color: var(--f);
+}
+.config .container {
+  flex-grow: 1;
+  margin: 0.5rem;
+  background-color: var(--c);
+  overflow-y: auto;
+  outline: none;
+}

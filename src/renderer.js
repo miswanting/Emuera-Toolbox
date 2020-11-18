@@ -30,3 +30,6 @@ require('electron').ipcRenderer.on('open-file', (e, data) => {
 require('electron').ipcRenderer.on('update-file-ast', (e, data) => {
   store.state.currentFile.ast = data
 })
+require('electron').ipcRenderer.on('enter-route', (e, data) => {
+  router.push(data.value)
+})
