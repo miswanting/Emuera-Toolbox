@@ -32,6 +32,7 @@
     "electron-is-dev": "latest",
     "iconv-lite": "latest",
     "iso-639-1": "latest",
+    "js-yaml": "latest",
     "monaco-editor": "latest",
     "normalize.css": "latest",
     "pegjs": "latest",

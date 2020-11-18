@@ -33,3 +33,17 @@ require('electron').ipcRenderer.on('update-file-ast', (e, data) => {
 require('electron').ipcRenderer.on('enter-route', (e, data) => {
   router.push(data.value)
 })
+require('electron').ipcRenderer.on('set-config', (e, data) => {
+  store.state.configs = data.value
+  handleConfig()
+})
+require('electron').ipcRenderer.on('save-config', (e) => {
+  console.log(123);
+  require('electron').ipcRenderer.send('save-config', { value: JSON.parse(JSON.stringify(store.state.configs)) })
+  handleConfig()
+})
+function handleConfig() {
+  if (store.state.configs['自动加载字典'].value) {
+    autoLoadDict()
+  }
+}
