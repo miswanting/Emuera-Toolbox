@@ -19,6 +19,8 @@ routes.push({
           if (config.type === 'Bool') {
             l.push(Vue.h('div', { class: { btn: true, active: config.value }, onClick: () => { this.setConfig(key, true) } }, '是'))
             l.push(Vue.h('div', { class: { btn: true, active: !config.value }, onClick: () => { this.setConfig(key, false) } }, '否'))
+          } else if (config.type === 'DictConfig') {
+            l.push(Vue.h('div', { class: { btn: true }, onClick: () => { this.setDictConfig() } }, '设置'))
           }
           configs.push(Vue.h('div', { class: 'config-item' }, l))
         }
