@@ -1,5 +1,5 @@
 const { app, BrowserWindow, dialog, Menu, ipcMain } = require('electron')
-const { readdirSync, statSync, readFileSync, existsSync, mkdirSync } = require('fs')
+const { readdirSync, statSync, readFileSync, existsSync, mkdirSync, writeFileSync } = require('fs')
 const { encode, decode } = require('iconv-lite')
 const { dirname, join, extname } = require('path')
 const { analyse } = require('chardet')
@@ -7,14 +7,33 @@ const peg = require('pegjs')
 const { execFileSync } = require('child_process')
 const { Worker } = require('worker_threads')
 const isDev = require('electron-is-dev')
+const { safeDump, safeLoad } = require('js-yaml')
+const CONFIG_PATH = 'config.yml'
 let win
+function init() {
+  createWindow()
+}
+function loadConfig() {
+  if (existsSync(CONFIG_PATH)) {
+    const config = safeLoad(readFileSync(CONFIG_PATH))
+    win.webContents.send('set-config', { value: config })
+  } else {
+    win.webContents.send('save-config')
+  }
+}
 function createWindow() {
   win = new BrowserWindow({
+    show: false,
     width: 800,
     height: 600,
+    backgroundColor: '#333639',
     webPreferences: {
       nodeIntegration: true
     }
+  })
+  win.once('ready-to-show', () => {
+    win.show()
+    loadConfig()
   })
   Menu.setApplicationMenu(
     Menu.buildFromTemplate([
@@ -86,6 +105,15 @@ function createWindow() {
           },
           { label: 'Export' },
           { type: 'separator' },
+          {
+            label: 'Config',
+            click: async () => {
+              win.webContents.send('enter-route', {
+                value: '/config'
+              })
+            }
+          },
+          { type: 'separator' },
           { role: 'close' }
         ]
       },
@@ -145,7 +173,15 @@ function createWindow() {
     win.webContents.openDevTools()
   }
 }
-app.whenReady().then(createWindow)
+app.whenReady().then(init)
+ipcMain.on('save-config', (e, data) => {
+  writeFileSync(CONFIG_PATH, safeDump(data.value))
+})
+ipcMain.on('auto-load-dict', (e) => {
+  if (existsSync('dic')) {
+
+  }
+})
 function initRootFolder(exePath) {
   const executableFilePath = exePath
   const rootFolderPath = dirname(executableFilePath)
@@ -251,7 +287,7 @@ function scanRootFolder(exePath) {
       }
       const content = decode(f, encoding)
       e.reply('open-file', content)
-      let pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
+      const pegFilePath = `src/grammars/${ext.slice(1, ext.length)}.pegjs`
       if (existsSync(pegFilePath)) {
         const configParser = peg.generate(decode(readFileSync(pegFilePath), 'UTF-8'))
         e.reply('update-file-ast', configParser.parse(content))
