@@ -1,5 +1,5 @@
-Start
-= Block*
+File
+= blocks:Block* { return { type: 'File', children: blocks } }
 Block
 = Meta
 / BlankLines

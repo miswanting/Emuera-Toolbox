@@ -30,6 +30,7 @@
     "@fortawesome/fontawesome-free": "latest",
     "chardet": "latest",
     "electron-is-dev": "latest",
+    "i18next": "latest",
     "iconv-lite": "latest",
     "iso-639-1": "latest",
     "js-yaml": "latest",
@@ -38,8 +39,7 @@
     "pegjs": "latest",
     "vue": "next",
     "vue-router": "next",
-    "vuex": "next",
-    "y18n": "latest"
+    "vuex": "next"
   },
   "standard": {
     "globals": [

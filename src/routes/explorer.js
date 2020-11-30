@@ -2,10 +2,10 @@ routes.push({
   path: '/explorer',
   component: {
     methods: {
-      enterNewPath (pathList) {
+      enterNewPath(pathList) {
         this.$store.state.currentPath = pathList
       },
-      entryClick (entry) {
+      entryClick(entry) {
         if (entry.type === 'folder') {
           this.$store.state.currentPath.push(entry.name)
         } else if (entry.type === 'file') {
@@ -25,8 +25,8 @@ routes.push({
         }
       }
     },
-    render () {
-      function getFolderEntries (path, structure) {
+    render() {
+      function getFolderEntries(path, structure) {
         if (path.length === 0) {
           return structure
         }
@@ -103,7 +103,10 @@ routes.push({
           Vue.h('div', { class: 'spacer' }),
           Vue.h('abbr', { title: 'New File.' }, Vue.h('i', { class: 'fas fa-file-medical fa-xs fa-fw' })),
           Vue.h('abbr', { title: 'New Folder.' }, Vue.h('i', { class: 'fas fa-folder-plus fa-xs fa-fw' })),
-          Vue.h('abbr', { title: 'New Dict.' }, Vue.h('i', { class: 'fas fa-book-medical fa-xs fa-fw' })),
+          Vue.h('abbr', { title: 'New Dict.' }, Vue.h('i', {
+            class: 'fas fa-book-medical fa-xs fa-fw',
+            style: { color: '#f00' }
+          })),
           Vue.h('abbr', { title: 'Convert All SHIFT_JIS File To UTF-8.' }, Vue.h('i', { class: 'fas fa-recycle fa-xs fa-fw' }))
         ]),
         Vue.h('div', {

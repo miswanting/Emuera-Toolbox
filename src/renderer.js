@@ -1,3 +1,5 @@
+const { default: i18next } = require('i18next')
+
 addEventListener('load', function () {
   window.app = Vue.createApp({
     template: '<router-view></router-view>'
@@ -43,7 +45,7 @@ require('electron').ipcRenderer.on('save-config', (e) => {
   handleConfig()
 })
 function handleConfig() {
-  if (store.state.configs['自动加载字典'].value) {
+  if (store.state.configs.DictAutoLoad) {
     autoLoadDict()
   }
 }
