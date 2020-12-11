@@ -276,7 +276,7 @@ BlockInStatements
 / SifStatement
 / ForStatement
 / WhileStatement
-/ Repeattatement
+/ RepeatStatement
 / DoLoopStatement
 / SelectCaseStatement
 / PrintdataStatement
@@ -287,7 +287,7 @@ BlockInStatements
 / TrycCJGformStatement
 
 
-// Statements 
+// IfDebugStatement 
 IfDebugStatement
 = _* '[' IF_DEBUGToken ']' LB body:BlockInFunction*   '[' ENDIFToken ']'{
   return{
@@ -295,7 +295,7 @@ IfDebugStatement
     body:body
   }
 }
-// Statements 
+// IfNDebugStatement 
 IfNDebugStatement
 = _* '[' IF_NDEBUGToken ']' LB body:BlockInFunction*   '[' ENDIFToken ']'{
   return{
@@ -303,7 +303,7 @@ IfNDebugStatement
     body:body
   }
 }
-// Statements 
+// NoSkipStatement 
 NoSkipStatement
 = _* '[' NOSKIPToken ']' LB body:BlockInFunction*   '[' ENDNOSKIPToken ']'{
   return{
@@ -311,7 +311,7 @@ NoSkipStatement
     body:body
   }
 }
-// Statements 
+// SkipStatement 
 SkipStatement
 = _* '[' SKIPSTARTToken ']' LB body:BlockInFunction*   '[' SKIPENDToken ']'{
   return{
@@ -369,55 +369,7 @@ ElsePart
       body:body
   }
 }
-
-
-//SIFStatement(ShortIF) SIF语句(短IF语句)
-SifStatement
-= _* SIFToken  condition:Expression* LB body:BlockInFunction*{
-  return{
-      type:"SIF Statement",
-      condition:condition.join(''),
-      body:body
-  }
-}
-
-//ForStatement For循环语句
-ForStatement
-= _* FORToken  condition:Expression* LB body:BlockInFunction* _* NEXTToken{
-  return{
-      type:"FOR Statement",
-      condition:condition.join(''),
-      body:body
-  }
-}
-//WhileStatement While循环语句
-WhileStatement
-=  _* WHILEToken condition:Expression*  body:BlockInFunction* _* WENDToken{
-  return{
-      type:"WHILE Statement",
-      condition:condition.join(''),
-      body:body
-  }
-}
-// Statements 
-Repeattatement
-=_* REPEATToken condition:Expression* LB body:BlockInFunction* _* RENDToken{
-  return{
-      type:"REPEAT Statement",
-      condition:condition.join(''),
-      body:body
-  }
-}
-// Statements 
-DoLoopStatement
-= _*  DOToken LB body:BlockInFunction* LOOPToken condition:Expression* LB{
-  return{
-      type:"DO-LOOP Statement",
-      condition:condition.join(''),
-      body:body
-  }
-}
-// Statements 
+// SelectCaseStatements 
 SelectCaseStatement
 = _* SELECTCASEToken _ condition:Expression* LB body:BlockInFunction* cases:CasePart* caseelse:CaseElsePart? ENDSELECTToken{
   return {
@@ -447,6 +399,54 @@ CaseElsePart
   }
 }
 
+//SIFStatement(ShortIF) SIF语句(短IF语句)
+SifStatement
+= _* SIFToken  condition:Expression* LB body:BlockInFunction*{
+  return{
+      type:"SIF Statement",
+      condition:condition.join(''),
+      body:body
+  }
+}
+
+//ForStatement For循环语句
+ForStatement
+= _* FORToken  condition:Expression* LB body:BlockInFunction* _* NEXTToken{
+  return{
+      type:"FOR Statement",
+      condition:condition.join(''),
+      body:body
+  }
+}
+//WhileStatement While循环语句
+WhileStatement
+=  _* WHILEToken condition:Expression*  body:BlockInFunction* _* WENDToken{
+  return{
+      type:"WHILE Statement",
+      condition:condition.join(''),
+      body:body
+  }
+}
+// REPEATStatements 
+RepeatStatement
+=_* REPEATToken condition:Expression* LB body:BlockInFunction* _* RENDToken{
+  return{
+      type:"REPEAT Statement",
+      condition:condition.join(''),
+      body:body
+  }
+}
+// DoLoopStatement 
+DoLoopStatement
+= _*  DOToken LB body:BlockInFunction* LOOPToken condition:Expression* LB{
+  return{
+      type:"DO-LOOP Statement",
+      condition:condition.join(''),
+      body:body
+  }
+}
+
+// PrintdataStatements 
 PrintdataStatement
 = _* token:PrintdataToken  condition:Expression* LB body:BlockInFunction* _* ENDDATAToken{
 return {
@@ -457,16 +457,16 @@ return {
 }
 
 
-// Statements 
+// StrdataStatement 
 StrdataStatement
-= _* 'strdata'i LB body:BlockInFunction* _* ENDDATAToken{
+= _* STRDATAToken LB body:BlockInFunction* _* ENDDATAToken{
 return {
     type:'STRDATA Statement',
     body:body
   }
 
 }
-// Statements 
+// DatalistStatement 
 DatalistStatement
 = _* DATALISTToken LB body:BlockInFunction* _* ENDLISTToken{
 return {
@@ -476,7 +476,7 @@ return {
 
 }
 
-//TrycCJGStatement
+//TrycCJGStatement CJG:CALL-JUMP-GOTO
 TrycCJGStatement
 = _* token:TrycCJGToken  condition:Expression* LB body:BlockInFunction* _* CATCHToken LB catchbody:BlockInFunction* _* ENDCATCHToken{
 return {
@@ -501,10 +501,10 @@ TrycCJGlistStatement
 = _* token:TrycCJGlistToken LB func:FuncPart*   _* ENDFUNCToken{
 return{type:token.toUpperCase() +' Statement',body:func}
 }
-// other//
+// Other//
 
 FuncPart
-='func'i  fun:Expression* LB{
+=FUNCToken  fun:Expression* LB{
   return{
     name:'FUNC',
     value:fun
