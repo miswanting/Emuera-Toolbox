@@ -1,9 +1,3 @@
-{
-
-
-}
-
-
 // File Structure //
 File
 = blocks:Block* { return { type: 'File', children: blocks } }
@@ -66,6 +60,7 @@ BlockInFunction
 / Preprocessor
 / Statement
 
+
 Parameter '形参'
 =params:Parameters* _* param:[^)\n\t\r,]+ _*  {
 	let pm = []
@@ -91,7 +86,7 @@ BlockInStatements
 
 
 AssignmentStatement
-= !(Keyword _)  left:IdentifierName+  operator:Operator _* right:Expression* LB? { return { type: "Assignment Statement",operator:operator,left:left.join(''),right:right.join('') }}
+= !Keyword  left:IdentifierName+  operator:Operator _* right:Expression* LB? { return { type: "Assignment Statement",operator:operator,left:left.join(''),right:right.join('') }}
 / PostfixExpression
 
 
@@ -110,19 +105,19 @@ Expression '表达式'
 
 
 Command
-= token:CommandToken _? exp:Expression+ LB{
+= token:CommandToken _? exp:Expression+ LB?{
   return {
     type: token.toUpperCase() + ' Command',
     value: exp.join('')
   }
-}/token:CommandToken _ LB{
+}/token:CommandToken _ LB?{
   return {
     type: token.toUpperCase() + ' Command',
     token:token,
     value: ""
   }
 }
-/token:CommandToken _? LB{
+/token:CommandToken  LB?{
   return {
     type: token.toUpperCase() + ' Command',
     token:token
@@ -512,7 +507,8 @@ FuncPart
 }
 
 Keyword
-  =  CommandToken / StatementsToken
+  =  StatementsToken _
+  // CommandToken _ / 
 
   // Token //
 
