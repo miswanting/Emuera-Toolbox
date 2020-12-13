@@ -1,0 +1,64 @@
+{
+  "name": "emuera-toolbox",
+  "version": "0.1.0",
+  "main": "dist/index",
+  "repository": "https://github.com/miswanting/Emuera-Toolbox.git",
+  "author": "Miswanting",
+  "license": "MIT",
+  "scripts": {
+    "setup": "yarn",
+    "standardize": "standard --fix",
+    "package-dev": "webpack --config webpack.config.dev.js",
+    "package-prod": "webpack --config webpack.config.prod.js",
+    "debug": "chcp 65001 && electron .",
+    "P-D": "call yarn run package-dev && call yarn run debug",
+    "build": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "latest",
+    "@vue/compiler-sfc": "latest",
+    "chardet": "latest",
+    "css-loader": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "electron-devtools-installer": "latest",
+    "electron-is-dev": "latest",
+    "html-webpack-plugin": "latest",
+    "i18next": "latest",
+    "iconv-lite": "latest",
+    "iso-639-1": "latest",
+    "js-yaml": "latest",
+    "lodash": "latest",
+    "mini-css-extract-plugin": "latest",
+    "normalize.css": "latest",
+    "pegjs": "latest",
+    "pug": "latest",
+    "pug-plain-loader": "latest",
+    "standard": "latest",
+    "style-loader": "latest",
+    "stylus": "latest",
+    "stylus-loader": "latest",
+    "vue": "next",
+    "vue-loader": "next",
+    "vue-router": "next",
+    "vue-style-loader": "latest",
+    "vuex": "next",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "worker-loader": "latest",
+    "worker-plugin": "latest"
+  },
+  "build": {
+    "appId": "net.erajs.toolbox",
+    "productName": "Emuera Toolbox",
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "standard": {
+    "ignore": [
+      "/dist/"
+    ],
+    "globals": []
+  }
+}

@@ -1,0 +1,60 @@
+name: Release Bot
+
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  Windows-x64:
+    runs-on: windows-latest
+
+    steps:
+      - name: Get Build Info
+        id: info
+        shell: bash
+        run: |
+          d=`date +%Y%m%d`
+          echo ::set-output name=DATE::${d:2:6}
+          echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: Emuera-Toolbox
+
+      - name: Setup Node.js Enviroment
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: "14"
+
+      - name: Build Electron Program
+        run: |
+          cd Emuera-Toolbox
+          npm run setup
+          npx electron-builder --dir
+
+      - name: Assemble Archive
+        run: |
+          Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip" -CompressionLevel Optimal
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.info.outputs.TAG_NAME }}
+          release_name: Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}
+          body_path: Emuera-Toolbox\CHANGELOG.md
+          draft: true
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
+          asset_name: "Emuera-Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip"
+          asset_content_type: application/zip

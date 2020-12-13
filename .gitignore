@@ -1,0 +1,5 @@
+*.yml
+node_modules
+dist
+res
+*.lock
