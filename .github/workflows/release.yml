@@ -31,10 +31,12 @@ jobs:
         run: |
           cd Emuera-Toolbox
           npm run setup
+          iwr https://github.com/laishulu/Sarasa-Mono-SC-Nerd/raw/master/sarasa-mono-sc-nerd-regular.ttf -OutFile src/res/sarasa-mono-sc-nerd-regular.ttf
           npx electron-builder --dir
 
       - name: Assemble Archive
         run: |
+          xcopy src\workers build\src\workers\ /E
           Compress-Archive -Path Emuera-Toolbox\* -DestinationPath "Emuera Toolbox ${{ steps.info.outputs.TAG_NAME }}+${{ steps.info.outputs.DATE }}.windows-x64.zip" -CompressionLevel Optimal
 
       - name: Create Release

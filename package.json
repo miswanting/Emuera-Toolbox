@@ -1,7 +1,7 @@
 {
   "name": "emuera-toolbox",
   "version": "0.1.0",
-  "main": "dist/index",
+  "main": "dist/index.js",
   "repository": "https://github.com/miswanting/Emuera-Toolbox.git",
   "author": "Miswanting",
   "license": "MIT",
@@ -52,7 +52,7 @@
     "appId": "net.erajs.toolbox",
     "productName": "Emuera Toolbox",
     "directories": {
-      "output": "dist"
+      "output": "build"
     }
   },
   "standard": {
