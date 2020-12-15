@@ -13,7 +13,7 @@ parentPort.on('message', pkg => {
     loadFileAst(pkg.data)
   }
 })
-function loadFileRaw (data) {
+function loadFileRaw(data) {
   if (data.ext !== '.exe') {
     const file = readFileSync(data.path)
     if (!data.encoding) {
@@ -32,11 +32,15 @@ function loadFileRaw (data) {
     })
   }
 }
-function loadFileAst (data) {
+function loadFileAst(data) {
   if (data.ext !== '.exe') {
     const pegFilePath = `./src/grammars/${data.ext.slice(1, data.ext.length)}.pegjs`
     if (existsSync(pegFilePath)) {
-      data.ast = generate(readFileSync(pegFilePath, { encoding: 'utf-8' })).parse(data.raw)
+      try {
+        data.ast = generate(readFileSync(pegFilePath, { encoding: 'utf-8' })).parse(data.raw)
+      } catch (e) {
+        console.log(e)
+      }
       parentPort.postMessage({
         type: 'updateFileAst',
         data: data

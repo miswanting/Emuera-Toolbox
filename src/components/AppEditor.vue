@@ -4,6 +4,11 @@ main.editor
     .title(@click="onTitleClick()") Editor
     .spacer
     .opreaters
+      abbr(title="编辑模式")
+        span 编
+      abbr(title="翻译模式")
+        span 译
+      span &emsp;
       abbr(title="New File")
         i.fas.fa-file-medical.fa-xs.fa-fw
       abbr(title="New Folder")
@@ -44,8 +49,9 @@ export default {
     },
     getFileMetaRecursively(pathPieces, hierarchy) {
       if (pathPieces.length === 1) return hierarchy.files[pathPieces[0]];
-      return getFileMetaRecursively(
-        pathPieces.slice(1, pathPieces.length, hierarchy.folders[pathPieces[0]])
+      return this.getFileMetaRecursively(
+        pathPieces.slice(1, pathPieces.length),
+        hierarchy.folders[pathPieces[0]]
       );
     },
   },
@@ -77,11 +83,10 @@ export default {
         background-color var(--hover-back)
 
     .opreaters
-      background-color var(--interactable-back)
-
       abbr
         cursor pointer
         padding 0 .1rem
+        background-color var(--interactable-back)
 
         &:hover
           background-color var(--hover-back)

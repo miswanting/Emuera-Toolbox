@@ -4,14 +4,14 @@ import { Worker } from 'worker_threads'
  * # 任务管理器
  */
 export default class TaskManager extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     this.data = {
       projectHierarchy: {}
     }
   }
 
-  exec (data) {
+  exec(data) {
     if (data.type === 'loadProjectFolder') {
       const projectLoader = new Worker('./src/workers/project-loader.js')
       projectLoader.on('message', (pkg) => {
@@ -22,7 +22,7 @@ export default class TaskManager extends EventEmitter {
           const pathPieces = pkg.data.path.split('/')
           pkg.data.path = pathPieces.slice(1, pathPieces.length)
           this.emit('send', pkg)
-          function updateFileEncodingRecursively (data, hierarchy) {
+          function updateFileEncodingRecursively(data, hierarchy) {
             if (data.path.length === 1) {
               hierarchy.files[data.path[0]].encoding = data.encoding
             } else {
@@ -42,12 +42,12 @@ export default class TaskManager extends EventEmitter {
           loadStatus: 'Processing'
         }
       })
-      function getFileMetaRecursively (data, hierarchy) {
+      function getFileMetaRecursively(data, hierarchy) {
         if (data.length === 1) {
           return hierarchy.files[data[0]]
         } else {
           const p = data.shift()
-          getFileMetaRecursively(data, hierarchy.folders[p])
+          return getFileMetaRecursively(data, hierarchy.folders[p])
         }
       }
       const fileMeta = getFileMetaRecursively(JSON.parse(JSON.stringify(data.data)), this.data.projectHierarchy)
@@ -74,19 +74,19 @@ export default class TaskManager extends EventEmitter {
           })
         }
       })
-      function loadFileRaw () {
+      function loadFileRaw() {
         fileLoader.postMessage({
           type: 'loadFileRaw',
           data: fileMeta
         })
       }
-      function loadFileAst () {
+      function loadFileAst() {
         fileLoader.postMessage({
           type: 'loadFileAst',
           data: fileMeta
         })
       }
-      if (fileMeta.hasOwnProperty('raw')) {
+      if (Object.prototype.hasOwnProperty.call(fileMeta, 'raw')) {
         this.emit('send', {
           type: 'updateFileRaw',
           data: {
@@ -98,7 +98,7 @@ export default class TaskManager extends EventEmitter {
         loadFileRaw()
         return
       }
-      if (fileMeta.hasOwnProperty('ast')) {
+      if (Object.prototype.hasOwnProperty.call(fileMeta, 'ast')) {
         this.emit('send', {
           type: 'updateFileAst',
           data: {
