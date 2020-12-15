@@ -33,7 +33,8 @@ jobs:
           npm run setup
           mkdir src/res
           tree
-          iwr https://github.com/laishulu/Sarasa-Mono-SC-Nerd/raw/master/sarasa-mono-sc-nerd-regular.ttf -OutFile src/res/sarasa-mono-sc-nerd-regular.ttf
+          (New-Object System.Net.WebClient).DownloadFile("https://github.com/laishulu/Sarasa-Mono-SC-Nerd/raw/master/sarasa-mono-sc-nerd-regular.ttf","src/res/sarasa-mono-sc-nerd-regular.ttf")
+          # iwr https://github.com/laishulu/Sarasa-Mono-SC-Nerd/raw/master/sarasa-mono-sc-nerd-regular.ttf -OutFile src/res/sarasa-mono-sc-nerd-regular.ttf
           npx electron-builder --dir
 
       - name: Assemble Archive
