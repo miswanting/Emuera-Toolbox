@@ -277,9 +277,9 @@ BlockInStatements
 / PrintdataStatement
 / StrdataStatement
 / DatalistStatement
-/ TrycCJGformStatement
+// / TrycCJGformStatement
 / TrycCJGlistStatement
-/ TrycCJGformStatement
+/ TrycCJGStatement
 
 
 // IfDebugStatement 
@@ -473,29 +473,33 @@ return {
 
 //TrycCJGStatement CJG:CALL-JUMP-GOTO
 TrycCJGStatement
-= _* token:TrycCJGToken  condition:Expression* LB body:BlockInFunction* _* CATCHToken LB catchbody:BlockInFunction* _* ENDCATCHToken{
+= _* token:(TrycCJGformToken/TrycCJGToken)  condition:Expression*  LB catchbody:Catchpart  _* ENDCATCHToken{
 return {
     type:token.toUpperCase() + ' Statement',
-    body:body,
+    // body:body,
     catchbody:catchbody
-  }
+  };
+} 
+Catchpart
+=_* CATCHToken LB body:BlockInFunction* {
+return body;
 }
 //TrycCJGformStatement CJG:CALL-JUMP-GOTO
-TrycCJGformStatement
-= _* token:TrycCJGformToken ondition:Expression* LB body:BlockInFunction* _* CATCHToken LB catchbody:BlockInFunction* _* ENDCATCHToken{
-return {
-    type:token.toUpperCase()  +' Statement',
-    body:body,
-    catchbody:catchbody
-  }
-}
+// TrycCJGformStatement
+// = _* token:TrycCJGformToken ondition:Expression* LB body:BlockInFunction* _* CATCHToken LB catchbody:BlockInFunction* _* ENDCATCHToken{
+// return {
+//     type:token.toUpperCase()  +' Statement',
+//     body:body,
+//     catchbody:catchbody
+//   }
+// }
 
 //TrycCJGlistStatement CJG:CALL-JUMP-GOTO
 
 TrycCJGlistStatement
-= _* token:TrycCJGlistToken LB func:FuncPart*   _* ENDFUNCToken{
+= _* token:TrycCJGlistToken LB func:FuncPart+   _* ENDFUNCToken{
 return{type:token.toUpperCase() +' Statement',body:func}
-}
+} 
 // Other//
 
 FuncPart
@@ -777,6 +781,12 @@ CommandToken
 / TOSTRToken 
 / TOUPPERToken 
 / TWAITToken 
+/ TRYCALLToken    
+/ TRYJUMPToken    
+/ TRYGOTOToken    
+/ TRYCALLFORMToken
+/ TRYJUMPFORMToken
+/ TRYGOTOFORMToken
 / UNICODEToken 
 / UPCHECKToken 
 / VARSETToken 
@@ -1058,12 +1068,12 @@ GOTOToken = "GOTO"i
 CALLFORMToken = "CALLFORM"i
 JUMPFORMToken = "JUMPFORM"i
 GOTOFORMToken = "GOTOFORM"i
-TRYCALLToken = "TRYCALL"i
-TRYJUMPToken = "TRYJUMP"i
-TRYGOTOToken = "TRYGOTO"i
-TRYCALLFORMToken = "TRYCALLFORM"i
-TRYJUMPFORMToken = "TRYJUMPFORM"i
-TRYGOTOFORMToken = "TRYGOTOFORM"i
+TRYCALLToken        = "TRYCALL"i
+TRYJUMPToken        = "TRYJUMP"i
+TRYGOTOToken        = "TRYGOTO"i
+TRYCALLFORMToken      = "TRYCALLFORM"i
+TRYJUMPFORMToken      = "TRYJUMPFORM"i
+TRYGOTOFORMToken      = "TRYGOTOFORM"i
 CALLFToken = "CALLF"i
 CALLFORMFToken = "CALLFORMF"i
 CALLEVENTToken = "CALLEVENT"i
