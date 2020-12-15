@@ -56,7 +56,7 @@ const Renderer = {
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Era.js'
+      title: 'Emuera Toolbox'
     })
   ]
 }
