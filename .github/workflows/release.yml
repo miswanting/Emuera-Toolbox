@@ -32,6 +32,7 @@ jobs:
           cd Emuera-Toolbox
           npm run setup
           mkdir src/res
+          tree
           iwr https://github.com/laishulu/Sarasa-Mono-SC-Nerd/raw/master/sarasa-mono-sc-nerd-regular.ttf -OutFile src/res/sarasa-mono-sc-nerd-regular.ttf
           npx electron-builder --dir
 
