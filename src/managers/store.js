@@ -5,11 +5,11 @@ import isDev from 'electron-is-dev'
 import { safeDump, safeLoad } from 'js-yaml'
 let toMain
 export default class StoreManager extends EventEmitter {
-  constructor (net) {
+  constructor(net) {
     super()
     toMain = net
     window.store = createStore({
-      state () {
+      state() {
         return {
           configs: {
             Language: 'en',
@@ -24,16 +24,17 @@ export default class StoreManager extends EventEmitter {
           currentFile: {
             content: null,
             ast: null
-          }
+          },
+          editorMode: 'view'
         }
       },
       mutations: {
-        parsePackage (state, pkg) {
+        parsePackage(state, pkg) {
           if (pkg.type === 'projectHierarchy') {
             state.projectHierarchy = pkg.data
             window.router.push('/explorer')
           } else if (pkg.type === 'updateFileEncoding') {
-            function updateFileEncodingRecursively (data, hierarchy) {
+            function updateFileEncodingRecursively(data, hierarchy) {
               if (data.path.length === 1) {
                 hierarchy.files[data.path[0]].encoding = data.encoding
               } else {
@@ -45,7 +46,7 @@ export default class StoreManager extends EventEmitter {
           } else if (pkg.type === 'loadFile') {
             toMain.send(pkg)
           } else if (pkg.type === 'updateFileRaw') {
-            function updateFileRawRecursively (data, hierarchy) {
+            function updateFileRawRecursively(data, hierarchy) {
               if (data.path.length === 1) {
                 hierarchy.files[data.path[0]].raw = data.raw
               } else {
@@ -55,7 +56,7 @@ export default class StoreManager extends EventEmitter {
             }
             updateFileRawRecursively(pkg.data, state.projectHierarchy)
           } else if (pkg.type === 'updateFileAst') {
-            function updateFileRawRecursively (data, hierarchy) {
+            function updateFileRawRecursively(data, hierarchy) {
               if (data.path.length === 1) {
                 hierarchy.files[data.path[0]].ast = data.ast
                 hierarchy.files[data.path[0]].loadStatus = 'Done'
@@ -71,6 +72,6 @@ export default class StoreManager extends EventEmitter {
     })
   }
 
-  getVueStore () { return window.store }
-  parsePackage (pkg) { window.store.commit('parsePackage', pkg) }
+  getVueStore() { return window.store }
+  parsePackage(pkg) { window.store.commit('parsePackage', pkg) }
 }

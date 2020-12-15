@@ -4,9 +4,17 @@ main.editor
     .title(@click="onTitleClick()") Editor
     .spacer
     .opreaters
-      abbr(title="编辑模式")
+      abbr(
+        title="编辑模式",
+        :class="{ active: $store.state.editorMode === 'edit' }",
+        @click="changeEditorMode('edit')"
+      )
         span 编
-      abbr(title="翻译模式")
+      abbr(
+        title="翻译模式",
+        :class="{ active: $store.state.editorMode === 'trans' }",
+        @click="changeEditorMode('trans')"
+      )
         span 译
       span &emsp;
       abbr(title="New File")
@@ -34,6 +42,9 @@ export default {
     EditorErh,
     EditorErb,
   },
+  data() {
+    return {};
+  },
   computed: {
     fileMeta() {
       return this.getFileMetaRecursively(
@@ -44,6 +55,13 @@ export default {
   },
   mounted() {},
   methods: {
+    changeEditorMode(text) {
+      if (this.$store.state.editorMode === "view")
+        this.$store.state.editorMode = text;
+      else if (text === this.$store.state.editorMode)
+        this.$store.state.editorMode = "view";
+      else this.$store.state.editorMode = text;
+    },
     onTitleClick() {
       this.$router.back();
     },
@@ -90,4 +108,16 @@ export default {
 
         &:hover
           background-color var(--hover-back)
+
+        &:active
+          background-color var(--active-back)
+
+        &.active
+          background-color var(--active-back)
+
+          &:hover
+            background-color var(--hover-back)
+
+          &:active
+            background-color var(--default-back)
 </style>
