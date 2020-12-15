@@ -16,8 +16,8 @@ BlankLines
 }
 
 Comment
-=(';!;'/ ';#;') comment:[^\n\r]* LB? { return { type: 'DebugComment', value: comment.join('') } } /
-';' comment:[^\n\r]* LB? { return { type: 'Comment', value: comment.join('') } }
+=_* (';!;'/ ';#;') comment:[^\n\r]* LB? { return { type: 'DebugComment', value: comment.join('') } } /
+_*  ';' comment:[^\n\r]* LB? { return { type: 'Comment', value: comment.join('') } }
 
 
 LB '换行'
@@ -87,13 +87,13 @@ BlockInStatements
 
 
 AssignmentStatement
-= !Keyword  left:IdentifierName+  operator:Operator _* right:[^;\n\t\r]* comment:Comment? LB? { return { type: "Assignment Statement",operator:operator,left:left.join(''),right:right.join(''),comment }}
+= !Keyword  left:IdentifierName+  operator:Operator _* right:Expression* comment:Comment? LB? { return { type: "Assignment Statement",operator:operator,left:left.join(''),right:right.join(''),comment }}
 / PostfixExpression
 
 
 
 Expression '表达式'
-= [^\n\t\r] 
+= [^;\n\t\r] 
 
 
 
@@ -106,7 +106,7 @@ Expression '表达式'
 
 
 Command
-= token:CommandToken _? exp:Expression+ LB?{
+= token:CommandToken _? exp:[^,\n\t\r]+ LB?{
   return {
     type: token.toUpperCase() + ' Command',
     value: exp.join('')
@@ -301,7 +301,7 @@ IfNDebugStatement
 }
 // NoSkipStatement 
 NoSkipStatement
-= _* '[' NOSKIPToken ']' LB body:BlockInFunction*   '[' ENDNOSKIPToken ']'{
+= _* '[' NOSKIPToken ']' comment:Comment? LB body:BlockInFunction*   '[' ENDNOSKIPToken ']'{
   return{
     type:'NoSkip Statement',
     body:body
@@ -309,7 +309,7 @@ NoSkipStatement
 }
 // SkipStatement 
 SkipStatement
-= _* '[' SKIPSTARTToken ']' LB body:BlockInFunction*   '[' SKIPENDToken ']'{
+= _* '[' SKIPSTARTToken ']' comment:Comment? LB body:BlockInFunction*   '[' SKIPENDToken ']'{
   return{
     type:'Skip Statement',
     body:body
@@ -341,36 +341,40 @@ ifbody:IfPart  elsebody:ElsePart _* ENDIFToken {
 }
 
 IfPart
-=_* IFToken _ condition:Expression* LB body:BlockInFunction*{
+=_* IFToken _ condition:Expression* comment:Comment? LB? body:BlockInFunction*{
   return{
       type:"IF Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 
 ElseifPart
-=_* ELSEIFToken _  condition:Expression* LB body:BlockInFunction*{
+=_* ELSEIFToken _  condition:Expression* comment:Comment? LB? body:BlockInFunction*{
   return{
       type:"ELSEIF Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 
 ElsePart
-= _* ELSEToken   LB body:BlockInFunction*{
+= _* ELSEToken comment:Comment?  LB? body:BlockInFunction*{
   return{
       type:"ELSE Statement",
+      comment,
       body:body
   }
 }
 // SelectCaseStatements 
 SelectCaseStatement
-= _* SELECTCASEToken _ condition:Expression* LB body:BlockInFunction* cases:CasePart* caseelse:CaseElsePart? ENDSELECTToken{
+= _* SELECTCASEToken _ condition:Expression* comment:Comment?  LB body:BlockInFunction* cases:CasePart* caseelse:CaseElsePart? ENDSELECTToken{
   return {
     type: 'SELECTCASE Statement',
     condition:condition.join(''),
+    comment,
     body:body,
     selectcasebody:{
       case:cases,
@@ -380,74 +384,82 @@ SelectCaseStatement
 } 
 
 CasePart
-=_* CASEToken _ condition:Expression* LB body:BlockInFunction*{
+=_* CASEToken _ condition:Expression* comment:Comment? LB body:BlockInFunction*{
   return {
     type: 'CASE Statement',
     condition:condition.join(''),
+    comment,
     body:body
   }
 }
 CaseElsePart
-=_* CASEELSEToken LB body:BlockInFunction*{
+=_* CASEELSEToken comment:Comment? LB body:BlockInFunction*{
   return {
     type: 'CASEELSE Statement',
+    comment,
     body:body
   }
 }
 
 //SIFStatement(ShortIF) SIF语句(短IF语句)
 SifStatement
-= _* SIFToken  condition:Expression* LB body:BlockInFunction*{
+= _* SIFToken  condition:Expression* comment:Comment? LB body:BlockInFunction*{
   return{
       type:"SIF Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 
 //ForStatement For循环语句
 ForStatement
-= _* FORToken  condition:Expression* LB body:BlockInFunction* _* NEXTToken{
+= _* FORToken  condition:Expression* comment:Comment? LB body:BlockInFunction* _* NEXTToken{
   return{
       type:"FOR Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 //WhileStatement While循环语句
 WhileStatement
-=  _* WHILEToken condition:Expression*  body:BlockInFunction* _* WENDToken{
+=  _* WHILEToken condition:Expression* comment:Comment?  body:BlockInFunction* _* WENDToken{
   return{
       type:"WHILE Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 // REPEATStatements 
 RepeatStatement
-=_* REPEATToken condition:Expression* LB body:BlockInFunction* _* RENDToken{
+=_* REPEATToken condition:Expression* comment:Comment? LB body:BlockInFunction* _* RENDToken{
   return{
       type:"REPEAT Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 // DoLoopStatement 
 DoLoopStatement
-= _*  DOToken LB body:BlockInFunction* LOOPToken condition:Expression* LB{
+= _*  DOToken LB body:BlockInFunction* LOOPToken condition:Expression* comment:Comment? LB{
   return{
       type:"DO-LOOP Statement",
       condition:condition.join(''),
+      comment,
       body:body
   }
 }
 
 // PrintdataStatements 
 PrintdataStatement
-= _* token:PrintdataToken  condition:Expression* LB body:BlockInFunction* _* ENDDATAToken{
+= _* token:PrintdataToken  condition:Expression* comment:Comment? LB body:BlockInFunction* _* ENDDATAToken{
 return {
     type:token.toUpperCase() + ' Statement',
     condition:condition.join(''),
+    comment,
     body:body
   }
 }
@@ -455,35 +467,39 @@ return {
 
 // StrdataStatement 
 StrdataStatement
-= _* STRDATAToken LB body:BlockInFunction* _* ENDDATAToken{
+= _* STRDATAToken comment:Comment? LB body:BlockInFunction* _* ENDDATAToken{
 return {
     type:'STRDATA Statement',
+    comment,
     body:body
   }
 
 }
 // DatalistStatement 
 DatalistStatement
-= _* DATALISTToken LB body:BlockInFunction* _* ENDLISTToken{
+= _* DATALISTToken comment:Comment? LB body:BlockInFunction* _* ENDLISTToken{
 return {
     type:'DATALIST Statement',
-    body:body
+    comment,
+    body:body,
+    
   }
 
 }
 
 //TrycCJGStatement CJG:CALL-JUMP-GOTO
 TrycCJGStatement
-= _* token:(TrycCJGformToken/TrycCJGToken)  condition:Expression*  LB catchbody:Catchpart  _* ENDCATCHToken{
+= _* token:(TrycCJGformToken/TrycCJGToken)  condition:Expression* comment:Comment?  LB catchbody:Catchpart+  _* ENDCATCHToken{
 return {
     type:token.toUpperCase() + ' Statement',
     // body:body,
+    comment,
     catchbody:catchbody
   };
 } 
 Catchpart
-=_* CATCHToken LB body:BlockInFunction* {
-return body;
+=_* CATCHToken  comment:Comment? LB body:BlockInFunction* {
+return {body,comment};
 }
 //TrycCJGformStatement CJG:CALL-JUMP-GOTO
 // TrycCJGformStatement
@@ -498,23 +514,23 @@ return body;
 //TrycCJGlistStatement CJG:CALL-JUMP-GOTO
 
 TrycCJGlistStatement
-= _* token:TrycCJGlistToken LB func:FuncPart+   _* ENDFUNCToken{
-return{type:token.toUpperCase() +' Statement',body:func}
+= _* token:TrycCJGlistToken comment:Comment? LB func:FuncPart+   _* ENDFUNCToken{
+return{type:token.toUpperCase() +' Statement',comment,body:func}
 } 
 // Other//
 
 FuncPart
-=FUNCToken  fun:Expression* LB{
+=FUNCToken  fun:Expression* comment:Comment? LB{
   return{
     name:'FUNC',
-    value:fun
+    value:fun,
+    comment
   }
 }
 
 Keyword
   =  StatementsToken _
-  // CommandToken _ / 
-
+  
   // Token //
 
 
