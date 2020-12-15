@@ -21,6 +21,8 @@ main.explorer
         i.fas.fa-recycle.fa-xs.fa-fw
   .content
     .entry(v-for="entryMeta in entryMetas", @click="onEntryClick(entryMeta)")
+      i.icon.fas.fa-file.fa-xs.fa-fw(v-if="entryMeta.type === 'file'")
+      i.icon.fas.fa-folder.fa-xs.fa-fw(v-if="entryMeta.type === 'folder'")
       .name {{ entryMeta.name + (entryMeta.type === 'folder' ? '/' : '') }}
       .description(v-if="getEntryDescription(entryMeta.name)") {{ getEntryDescription(entryMeta.name) }}
       abbr(title="Active Target", v-if="entryMeta.ext === '.exe'")
@@ -81,13 +83,33 @@ export default {
   },
   methods: {
     getEntryDescription(entryName) {
-      const ext = extname(entryName).toLowerCase();
+      entryName = entryName.toLowerCase();
+      const ext = extname(entryName);
       let entryDescription = "";
-      if (ext === ".exe") entryDescription = "EmueraExecutableFile";
-      else if (ext === ".config") entryDescription = "ConfigFile";
-      else if (ext === ".csv") entryDescription = "CSVFile";
-      else if (ext === ".erh") entryDescription = "EraBasicHeaderFile";
-      else if (ext === ".erb") entryDescription = "EraBasicScriptFile";
+      if (entryName === "gamebase.csv") entryDescription = "基本数据注册文件";
+      else if (entryName === "palam.csv") entryDescription = "属性注册文件";
+      else if (entryName === "abl.csv") entryDescription = "能力注册文件";
+      else if (entryName === "talent.csv") entryDescription = "素质注册文件";
+      else if (entryName === "mark.csv") entryDescription = "刻印注册文件";
+      else if (entryName === "exp.csv") entryDescription = "经验注册文件";
+      else if (entryName === "train.csv") entryDescription = "指令注册文件";
+      else if (entryName === "item.csv") entryDescription = "物品注册文件";
+      else if (entryName === "str.csv") entryDescription = "文本注册文件";
+      else if (entryName.startsWith("chara") && entryName.endsWith(".csv"))
+        entryDescription = "角色初始数据预设文件";
+      else if (entryName === "_replace.csv")
+        entryDescription = "引擎默认文本替换文件";
+      else if (entryName === "_default.config")
+        entryDescription = "引擎配置文件（游戏默认）";
+      else if (entryName === "emuera.config")
+        entryDescription = "引擎配置文件（当前设置）";
+      else if (entryName === "_fixed.config")
+        entryDescription = "引擎配置文件（游戏强制覆盖）";
+      else if (ext === ".exe") entryDescription = "游戏引擎";
+      else if (ext === ".config") entryDescription = "引擎配置文件";
+      else if (ext === ".csv") entryDescription = "游戏数据文件";
+      else if (ext === ".erh") entryDescription = "EraBasic头文件";
+      else if (ext === ".erb") entryDescription = "EraBasic脚本";
       return entryDescription;
     },
     onEntryClick(entryMeta) {
@@ -178,6 +200,9 @@ export default {
 
     &:hover
       background-color var(--hover-back)
+
+    .icon
+      padding 0 .2rem
 
     .description, .encoding
       font-size x-small
