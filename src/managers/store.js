@@ -66,6 +66,8 @@ export default class StoreManager extends EventEmitter {
               }
             }
             updateFileRawRecursively(pkg.data, state.projectHierarchy)
+          } else if (pkg.type === 'enterRoute') {
+            window.router.push(pkg.data)
           }
         }
       }

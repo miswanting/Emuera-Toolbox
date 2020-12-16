@@ -145,9 +145,11 @@ export default {
   abbr
     text-decoration none
 
+  td
+    vertical-align top
+
   .line-num
     width min-width
     user-select none
-    vertical-align top
     text-align end
 </style>

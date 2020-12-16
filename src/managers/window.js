@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { BrowserWindow, Menu, dialog } from 'electron'
 import isDev from 'electron-is-dev'
 export default class WindowManager extends EventEmitter {
-  constructor (config = null) {
+  constructor(config = null) {
     super()
     if (config) {
       this.config = config
@@ -21,14 +21,14 @@ export default class WindowManager extends EventEmitter {
     }
   }
 
-  start () {
+  start() {
     this.createMainWindow()
     if (isDev) {
       this.prepareDevelopEnviroment()
     }
   }
 
-  createMainWindow () {
+  createMainWindow() {
     this.win = new BrowserWindow(this.config)
     this.win.once('ready-to-show', () => {
       this.win.show()
@@ -38,7 +38,7 @@ export default class WindowManager extends EventEmitter {
     this.win.webContents.session.clearCache()
   }
 
-  prepareDevelopEnviroment () {
+  prepareDevelopEnviroment() {
     const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
     installExtension(VUEJS_DEVTOOLS)
       .then((name) => console.log(`Extension Added!: ${name}`))
@@ -50,7 +50,7 @@ export default class WindowManager extends EventEmitter {
     this.win.webContents.openDevTools()
   }
 
-  generateMenu () {
+  generateMenu() {
     Menu.setApplicationMenu(
       Menu.buildFromTemplate([
         {
@@ -134,7 +134,27 @@ export default class WindowManager extends EventEmitter {
           ]
         },
         { role: 'editMenu' },
-        { role: 'viewMenu' },
+        {
+          label: 'View',
+          submenu: [
+            {
+              label: 'Dictionary Manager',
+              click: async () => {
+                this.emit('exec', { type: 'enterRoute', data: '/dm' })
+              }
+            },
+            { type: 'separator' },
+            { role: 'reload' },
+            { role: 'forceReload' },
+            { role: 'toggleDevTools' },
+            { type: 'separator' },
+            { role: 'resetZoom' },
+            { role: 'zoomIn' },
+            { role: 'zoomOut' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' }
+          ]
+        },
         { role: 'windowMenu' },
         {
           role: 'help',

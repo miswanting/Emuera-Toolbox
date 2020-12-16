@@ -109,6 +109,11 @@ export default class TaskManager extends EventEmitter {
       } else {
         loadFileAst()
       }
+    } else if (data.type === 'enterRoute') {
+      this.emit('send', {
+        type: 'enterRoute',
+        data: data.data
+      })
     } else {
       console.log(data)
     }

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { BrowserWindow, ipcMain, ipcRenderer } from 'electron'
 export default class NetManager extends EventEmitter {
-  constructor (target) {
+  constructor(target) {
     super()
     this.target = target
     switch (this.target) {
@@ -14,30 +14,36 @@ export default class NetManager extends EventEmitter {
       default:
         break
     }
-    this.recv = (data) => { this.emit('recv', data) }
+    this.recv = (data) => {
+      console.log(`Recv: ${data}`);
+      this.emit('recv', data)
+    }
     this.core.on('recv', this.recv)
   }
 
-  start () { this.core.start() }
-  send (data) { this.core.send(data) }
+  start() { this.core.start() }
+  send(data) {
+    console.log(`Send: ${data}`);
+    this.core.send(data)
+  }
 }
 class ToMain extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     ipcRenderer.on('data', (e, data) => { this.recv(data) })
   }
 
-  start () { }
-  send (data) { ipcRenderer.send('data', data) }
-  recv (data) { this.emit('recv', data) }
+  start() { }
+  send(data) { ipcRenderer.send('data', data) }
+  recv(data) { this.emit('recv', data) }
 }
 class ToRenderer extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     ipcMain.on('data', (e, data) => { this.recv(data) })
   }
 
-  start () { }
-  send (data) { BrowserWindow.getAllWindows()[0].webContents.send('data', data) }
-  recv (data) { this.emit('recv', data) }
+  start() { }
+  send(data) { BrowserWindow.getAllWindows()[0].webContents.send('data', data) }
+  recv(data) { this.emit('recv', data) }
 }
