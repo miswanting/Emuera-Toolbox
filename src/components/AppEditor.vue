@@ -56,11 +56,10 @@ export default {
   mounted() {},
   methods: {
     changeEditorMode(text) {
-      if (this.$store.state.editorMode === "view")
-        this.$store.state.editorMode = text;
-      else if (text === this.$store.state.editorMode)
-        this.$store.state.editorMode = "view";
-      else this.$store.state.editorMode = text;
+      if (this.$store.state.editorMode === "edit")
+        this.$store.state.editorMode = "trans";
+      else if (this.$store.state.editorMode === "trans")
+        this.$store.state.editorMode = "edit";
     },
     onTitleClick() {
       this.$router.back();

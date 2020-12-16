@@ -13,12 +13,12 @@ import WindowManager from './managers/window'
 import NetManager from './managers/net'
 import TaskManager from './managers/task'
 export default class MainManager {
-  constructor () {
+  constructor() {
     this.CONFIG_PATH = 'config.yml'
     this.app = new AppManager()
     this.win = new WindowManager({
-      width: 800,
-      height: 600,
+      width: 1366,
+      height: 768,
       show: false,
       useContentSize: true,
       webPreferences: {
@@ -37,7 +37,7 @@ export default class MainManager {
     this.task.on('send', (pkg) => { this.toRenderer.send(pkg) })
   }
 
-  start () {
+  start() {
     this.win.start()
   }
 }

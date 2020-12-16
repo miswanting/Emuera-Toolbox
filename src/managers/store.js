@@ -25,7 +25,7 @@ export default class StoreManager extends EventEmitter {
             content: null,
             ast: null
           },
-          editorMode: 'view'
+          editorMode: 'edit'
         }
       },
       mutations: {
