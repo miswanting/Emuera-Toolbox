@@ -5,6 +5,7 @@ const { execFileSync } = require('child_process')
 const { analyse } = require('chardet')
 const { decode } = require('iconv-lite')
 const { generate } = require('pegjs')
+const { parse } = require('./parser.js')
 parentPort.on('message', pkg => {
   if (pkg.type === 'loadFileRaw') {
     loadFileRaw(pkg.data)
@@ -37,7 +38,8 @@ function loadFileAst(data) {
     const pegFilePath = `./src/grammars/${data.ext.slice(1, data.ext.length)}.pegjs`
     if (existsSync(pegFilePath)) {
       try {
-        data.ast = generate(readFileSync(pegFilePath, { encoding: 'utf-8' })).parse(data.raw)
+        // data.ast = generate(readFileSync(pegFilePath, { encoding: 'utf-8' })).parse(data.raw)
+        data.ast = parse(data.raw)
       } catch (e) {
         console.log(e)
       }

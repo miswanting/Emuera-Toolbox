@@ -143,6 +143,12 @@ export default class WindowManager extends EventEmitter {
                 this.emit('exec', { type: 'enterRoute', data: '/dm' })
               }
             },
+            {
+              label: 'Translation Source Manager',
+              click: async () => {
+                this.emit('exec', { type: 'enterRoute', data: '/tsm' })
+              }
+            },
             { type: 'separator' },
             { role: 'reload' },
             { role: 'forceReload' },

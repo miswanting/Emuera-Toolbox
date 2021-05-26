@@ -43,6 +43,7 @@ export default {
         });
       } else if (this.$store.state.editorMode === "trans" && this.data.raw) {
       }
+
       this.rows = rows;
       // http://api.microsofttranslator.com/v2/Http.svc/Translate?appId=A4D660A48A6A97CCA791C34935E4C02BBB1BEC1C&from=&to=zh&text=color
       // http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i=%E8%AE%A1%E7%AE%97

@@ -15,7 +15,7 @@ export default class NetManager extends EventEmitter {
         break
     }
     this.recv = (data) => {
-      console.log(`Recv: ${data}`);
+      // console.log(`Recv: ${data}`);
       this.emit('recv', data)
     }
     this.core.on('recv', this.recv)
@@ -23,7 +23,7 @@ export default class NetManager extends EventEmitter {
 
   start() { this.core.start() }
   send(data) {
-    console.log(`Send: ${data}`);
+    // console.log(`Send: ${data}`);
     this.core.send(data)
   }
 }

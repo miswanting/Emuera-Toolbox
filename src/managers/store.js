@@ -11,21 +11,26 @@ export default class StoreManager extends EventEmitter {
     window.store = createStore({
       state() {
         return {
-          configs: {
-            Language: 'en',
-            DictAutoLoad: true
-          },
-          dictConfigs: {
-            activeDicts: [],
-            currentDict: null
-          },
-          currentPath: [],
+          // configs: {
+          //   Language: 'en',
+          //   DictAutoLoad: true
+          // },
+          // dictConfigs: {
+          //   activeDicts: [],
+          //   currentDict: null
+          // },
+          // currentPath: [],
           projectHierarchy: {},
-          currentFile: {
-            content: null,
-            ast: null
-          },
-          editorMode: 'edit'
+          // currentFile: {
+          //   content: null,
+          //   ast: null
+          // },
+          editorMode: 'edit', // trans
+          dict: {
+            avaliable: [],
+            active: [],
+            current: ''
+          }
         }
       },
       mutations: {
