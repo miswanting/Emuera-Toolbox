@@ -1,0 +1,42 @@
+{
+  "name": "emuera-toolbox",
+  "version": "0.1.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "setup": "yarn",
+    "F:dev": "yarn vite",
+    "B:dev": "chcp 65001 && yarn electron .",
+    "F:build": "yarn vue-tsc --noEmit && vite build",
+    "B:build": "yarn rollup -c",
+    "B:build-W": "yarn rollup -c -w",
+    "F:serve": "yarn vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "latest",
+    "socket.io-client": "latest",
+    "vue": "next",
+    "vue-i18n": "next",
+    "vue-router": "next",
+    "vuex": "next",
+    "y18n": "latest"
+  },
+  "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "latest",
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-multi-entry": "latest",
+    "@rollup/plugin-node-resolve": "latest",
+    "@types/y18n": "latest",
+    "@vitejs/plugin-vue": "latest",
+    "@vue/compiler-sfc": "latest",
+    "acorn": "latest",
+    "electron": "latest",
+    "rollup": "latest",
+    "socket.io": "latest",
+    "stylus": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vite-plugin-windicss": "latest",
+    "vue-tsc": "latest",
+    "windicss": "latest"
+  }
+}
