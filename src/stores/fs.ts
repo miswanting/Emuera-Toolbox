@@ -1,3 +1,4 @@
+import { setTransitionHooks } from "@vue/runtime-core";
 import { ipcRenderer } from "electron";
 
 export default {
@@ -10,20 +11,34 @@ export default {
   mutations: {
   },
   actions: {
-    openEmueraExec({ state }: any) {
-      ipcRenderer.invoke('openEmueraExec').then(value => {
-        // if (!value.canceled) {
-        //   console.log(value.filePaths);
-        //   if (value.filePaths.length === 1) {
-        //     state.emueraExePath = value.filePaths[0]
-        //     state.isLocated = true
-        //   }
-        // }
+    locateEmueraExe({ state }: any) {
+      ipcRenderer.send('projectInit')
+      ipcRenderer.on('setProjectFS', (e, value) => {
+        state.project = value
+        state.isLocated = true
+        window.router.push('./explorer')
+      })
+      ipcRenderer.on('setFileEncoding', (e, path, encoding) => {
+        console.log(path, encoding);
+        function search(node: any) {
+          for (const key in node.files) {
+            if (Object.prototype.hasOwnProperty.call(node.files, key)) {
+              if (node.files[key].path === path) {
+                if (node.files[key].loadStatus === 0) {
+                  node.files[key].loadStatus = 1
+                }
+                node.files[key].encoding = encoding
+                console.log(node.files[key]);
+                return
+              }
+            }
+          }
+          for (const key in node.folders) {
+            search(node.folders[key])
+          }
+        }
+        search(state.project)
       })
     },
-    setProjectFS({ state }, value) {
-      state.project = value
-      window.router.push('./explorer')
-    }
   }
 }

@@ -5,6 +5,7 @@ export default defineConfig({
   safelist: [
     // Colors
     // Typography
+    'text-xs',
     'text-xl',
     'font-bold',
     'text-center',
@@ -25,6 +26,14 @@ export default defineConfig({
     'p-2',
     'px-1',
     'py-1',
+    'px-2',
+    'py-2',
+    'm-1',
+    'm-2',
+    'mx-1',
+    'my-1',
+    'mx-2',
+    'my-2',
     // Sizing
     // Display
     // Flexbox
@@ -34,9 +43,12 @@ export default defineConfig({
     // Grid
     'grid',
     // Positioning
+    'self-center',
     'place-items-center',
     'absolute',
     'relative',
+    // Filters
+    'backdrop-filter',
     // Behaviors
     'cursor-default',
     'cursor-pointer',

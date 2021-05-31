@@ -5,6 +5,8 @@ declare module '@vue/runtime-core' {
     menu: any,
     theme: any,
     debug: any,
+    fs: any,
+    edit: any,
   }
   interface ComponentCustomProperties {
     $store: Store<State>

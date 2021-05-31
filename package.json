@@ -3,16 +3,22 @@
   "version": "0.1.0",
   "main": "dist/main.js",
   "scripts": {
+    "clean": "rmdir /S /Q dist && rmdir /S /Q output && rmdir /S /Q node_modules && del yarn.lock",
     "setup": "yarn",
     "F:dev": "yarn vite",
     "B:dev": "chcp 65001 && yarn electron .",
     "F:build": "yarn vue-tsc --noEmit && vite build",
     "B:build": "yarn rollup -c",
     "B:build-W": "yarn rollup -c -w",
-    "F:serve": "yarn vite preview"
+    "F:serve": "yarn vite preview",
+    "build": "yarn F:build && yarn B:build",
+    "package": "yarn electron-builder --dir",
+    "distribute": "yarn electron-builder"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "latest",
+    "chardet": "latest",
+    "iconv-lite": "latest",
     "socket.io-client": "latest",
     "vue": "next",
     "vue-i18n": "next",
@@ -25,18 +31,35 @@
     "@rollup/plugin-commonjs": "latest",
     "@rollup/plugin-multi-entry": "latest",
     "@rollup/plugin-node-resolve": "latest",
+    "@rollup/plugin-typescript": "latest",
+    "@types/vfile-message": "latest",
     "@types/y18n": "latest",
     "@vitejs/plugin-vue": "latest",
     "@vue/compiler-sfc": "latest",
     "acorn": "latest",
     "electron": "latest",
+    "electron-builder": "latest",
     "rollup": "latest",
     "socket.io": "latest",
     "stylus": "latest",
+    "ts-standard": "latest",
     "typescript": "latest",
     "vite": "latest",
     "vite-plugin-windicss": "latest",
     "vue-tsc": "latest",
     "windicss": "latest"
+  },
+  "build": {
+    "productName": "Emuera Toolbox",
+    "appId": "net.erajs.emuera-toolbox",
+    "mac": {
+      "category": "none"
+    },
+    "files": [
+      "./dist/**/*"
+    ],
+    "directories": {
+      "output": "output"
+    }
   }
 }

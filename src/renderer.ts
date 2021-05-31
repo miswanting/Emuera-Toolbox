@@ -10,6 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import AppIndex from './routes/AppIndex.vue'
 import Explorer from './routes/Explorer.vue'
+import Editor from './routes/Editor.vue'
 
 import MenuStoreModule from './stores/menu'
 import ThemeStoreModule from './stores/theme'
@@ -19,6 +20,15 @@ import locale_en from './locales/en.yml'
 import locale_zh_CN from './locales/zh_CN.yml'
 import { ipcRenderer } from 'electron'
 
+
+export { };
+declare global {
+  interface Window {
+    store?: any;
+    router?: any;
+    i18n?: any;
+  }
+}
 
 addEventListener('load', function () {
   window.store = createStore({
@@ -34,7 +44,8 @@ addEventListener('load', function () {
     history: createWebHistory(),
     routes: [
       { path: '/', component: AppIndex },
-      { path: '/explorer:path(.*)*', component: Explorer },
+      { path: '/explorer/:pieces*', component: Explorer },
+      { path: '/editor/:pieces*', component: Editor },
     ]
   })
 
@@ -56,8 +67,9 @@ addEventListener('load', function () {
 
   app.mount('body')
 
+  window.router.push('/')
+
   ipcRenderer.on('setProjectFS', (e, value) => {
     window.store.dispatch('fs/setProjectFS', value)
-
   })
 })

@@ -6,7 +6,7 @@
     @click="click",
     class="hover:text-white hover:bg-black hover:dark:text-black hover:dark:bg-white"
   ) {{ $t('role' in data ? data.role : data.label) }}
-  .menu-container.absolute.border(v-if="show")
+  .menu-container.absolute.border.backdrop-filter(v-if="show")
     HeaderMenuItem(
       v-for="item in data.submenu",
       :data="item",
@@ -20,10 +20,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "HeaderMenuItem",
-  props: {
-    data: Object,
-    isRoot: Boolean,
-  },
+  props: ["data", "isRoot"],
   data() {
     return {
       show: false,

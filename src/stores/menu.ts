@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron';
-import i18next from 'i18next';
 
 export default {
   namespaced: true,
@@ -15,7 +14,7 @@ const template = [
       {
         label: 'Open',
         click: () => {
-          window.store.dispatch('fs/openEmueraExec')
+          window.store.dispatch('fs/locateEmueraExe')
         }
       },
       { type: 'separator' },
