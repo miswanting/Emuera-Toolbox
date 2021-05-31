@@ -1,0 +1,49 @@
+{
+  "name": "emuera-toolbox",
+  "version": "0.1.0",
+  "description": "Good",
+  "main": "dist/main.js",
+  "repository": "https://github.com/miswanting/Emuera-Toolbox.git",
+  "author": "(ง •_•)ง <453542772@qq.com>",
+  "license": "GPL-3.0+",
+  "scripts": {
+    "setup": "yarn",
+    "build": "yarn webpack",
+    "watch": "yarn webpack --watch",
+    "debug": "yarn electron .",
+    "start": "yarn webpack serve --open",
+    "package": "yarn electron-builder --dir",
+    "distribute": "yarn electron-builder"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "latest",
+    "@vue/compiler-sfc": "latest",
+    "css-loader": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "html-webpack-plugin": "latest",
+    "pug": "latest",
+    "pug-plain-loader": "latest",
+    "style-loader": "latest",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "vue": "next",
+    "vue-i18n": "next",
+    "vue-loader": "next",
+    "vue-router": "next",
+    "vue-template-compiler": "latest",
+    "vuex": "next",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest",
+    "windicss-webpack-plugin": "latest",
+    "yaml-loader": "latest"
+  },
+  "build": {
+    "productName": "Emuera Toolbox",
+    "appId": "net.erajs.toolbox",
+    "directories": {
+      "output": "output"
+    }
+  }
+}
