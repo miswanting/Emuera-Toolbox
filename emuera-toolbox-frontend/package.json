@@ -1,5 +1,11 @@
 {
+  "name": "emuera-toolbox-frontend",
+  "description": "Frontend of Emuera Toolbox.",
   "version": "0.1.0",
+  "main": "index.js",
+  "repository": "?",
+  "author": "Miswanting",
+  "license": "GPL-3.0+",
   "scripts": {
     "init": "yarn",
     "dev": "yarn vite",
@@ -7,8 +13,10 @@
     "serve": "yarn vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "d3": "latest",
     "lodash": "latest",
+    "normalize.css": "latest",
     "vue": "next",
     "vue-i18n": "next",
     "vue-router": "next",
@@ -17,15 +25,10 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "latest",
     "@vue/compiler-sfc": "latest",
+    "stylus": "^0.54.8",
     "typescript": "latest",
     "vite": "latest",
     "vite-plugin-singlefile": "^0.5.1",
     "vue-tsc": "latest"
-  },
-  "name": "emuera-toolbox-frontend",
-  "description": "Frontend of Emuera Toolbox.",
-  "main": "index.js",
-  "repository": "?",
-  "author": "Miswanting",
-  "license": "GPL-3.0+"
+  }
 }

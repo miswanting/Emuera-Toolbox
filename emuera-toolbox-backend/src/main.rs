@@ -1,11 +1,12 @@
 use chardetng::EncodingDetector;
 use dialoguer::Confirm;
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use indicatif::{MultiProgress, ProgressBar};
 use std::collections::VecDeque;
 use std::fs::{create_dir, read_dir, File};
 use std::io::Read;
 use std::path::PathBuf;
-use std::thread::{sleep, spawn, Thread};
+use std::sync::{Arc, Mutex};
+use std::thread::{sleep, spawn};
 use std::time::Duration;
 use std::{io::Write, net::TcpListener};
 use tungstenite::server::accept;
@@ -22,7 +23,7 @@ struct Request {
 fn main() {
     const HOST: &str = "localhost";
     const PORT: u16 = 11994;
-    const WORKING_DIRECTORY: &str = "cwd";
+    const WORKING_DIRECTORY: &str = "wd";
     // show_ui();
     // start_server(HOST, PORT);
     start_backend(WORKING_DIRECTORY);
@@ -128,6 +129,37 @@ fn start_backend(wd: &str) {
             todo!();
         }
     }
+    let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
+    spawn(|| {
+        let mut dirs: VecDeque<PathBuf> = VecDeque::new();
+        fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
+            for entry in read_dir(path).unwrap() {
+                let entry_path = entry.unwrap().path();
+                if entry_path.is_dir() {
+                    dirs.push_back(entry_path);
+                } else {
+                    if ["exe", "config", "csv", "erh", "erb"].contains(
+                        &entry_path
+                            .extension()
+                            .unwrap()
+                            .to_ascii_lowercase()
+                            .to_str()
+                            .unwrap(),
+                    ) {
+                        scaned_files.push_back(entry_path);
+                    }
+                }
+            }
+        }
+        scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
+        while !dirs.is_empty() {
+            let path = dirs.pop_front().unwrap();
+            scan_path(&mut scaned_files, &mut dirs, path);
+        }
+        for file in scaned_files {
+            println!("{:?}", file);
+        }
+    });
 }
 fn check_folder_structure(wd: &str) {
     let root_path = PathBuf::from(wd);
