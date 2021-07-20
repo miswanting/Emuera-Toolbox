@@ -1,0 +1,21 @@
+[package]
+edition = "2018"
+name = "emuera-toolbox-backend"
+version = "0.1.0"
+[[bin]]
+filename = "Emuera Toolbox"
+name = "emuera-toolbox-backend"
+path = "src/main.rs"
+[dependencies]
+chardetng = "*"
+console = "*"
+dialoguer = "*"
+digest = "*"
+include_dir = "*"
+indicatif = "*"
+notify = "*"
+pest = "*"
+plotters = "*"
+tempdir = "*"
+tungstenite = "*"
+walkdir = "*"
