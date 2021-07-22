@@ -26,7 +26,8 @@ fn main() {
     const WORKING_DIRECTORY: &str = "wd";
     // show_ui();
     // start_server(HOST, PORT);
-    start_backend(WORKING_DIRECTORY);
+    create_window();
+    // start_backend(WORKING_DIRECTORY);
     // check_folder_structure(WORKING_DIRECTORY);
     // let files = scan_folder(WORKING_DIRECTORY);
     // predict_encoding(files);
@@ -35,7 +36,93 @@ fn main() {
     // parse_erh();
     // parse_erb();
 }
+// fn create_window_old() {
+//     let event_loop = EventLoop::new();
+//     let window = WindowBuilder::new()
+//         .with_title("Hello World")
+//         // .with_position(Position::Physical(PhysicalPosition::new(0, 0)))
+//         // .with_inner_size(Size::Physical(PhysicalSize::new(500, 500)))
+//         // .with_maximized(true)
+//         .build(&event_loop)
+//         .unwrap();
+//     window.set_maximized(true);
+//     let scale_rate = 9;
+//     let monitor_size = window.current_monitor().unwrap().size();
+//     let window_size = PhysicalSize::new(
+//         monitor_size.width * scale_rate / 10,
+//         monitor_size.height * scale_rate / 10,
+//     );
+//     window.set_outer_position(Position::Physical(PhysicalPosition::new(
+//         ((monitor_size.width - window_size.width) / 2)
+//             .try_into()
+//             .unwrap(),
+//         ((monitor_size.height - window_size.height) / 2)
+//             .try_into()
+//             .unwrap(),
+//     )));
+//     window.set_inner_size(window_size);
+//     println!("{:?}", window.current_monitor().unwrap().size());
+//     println!("{}", window.is_maximized());
+//     // window.set_fullscreen(Fullscreen::Borderless(window.current_monitor()));
+//     let webview = WebViewBuilder::new(window)
+//         .unwrap()
+//         .with_url("https://tauri.studio")
+//         .unwrap()
+//         .build()
+//         .unwrap();
 
+//     event_loop.run(move |event, _, control_flow| {
+//         *control_flow = ControlFlow::Wait;
+//         let ps = PhysicalSize::new(800, 600);
+//         match event {
+//             Event::NewEvents(StartCause::Init) => println!("Wry has started!"),
+//             Event::WindowEvent {
+//                 event: WindowEvent::CloseRequested,
+//                 ..
+//             } => *control_flow = ControlFlow::Exit,
+//             Event::WindowEvent {
+//                 event: WindowEvent::Resized(ps),
+//                 ..
+//             } => webview.resize().unwrap(),
+//             _ => (),
+//         }
+//     });
+// }
+
+fn create_window() {
+    use wry::{
+        application::{
+            event::{Event, StartCause, WindowEvent},
+            event_loop::{ControlFlow, EventLoop},
+            window::WindowBuilder,
+        },
+        webview::WebViewBuilder,
+    };
+    let event_loop = EventLoop::new();
+    let window = WindowBuilder::new()
+        .with_title("Emuera Toolbox")
+        .build(&event_loop)
+        .unwrap();
+    println!("{:?}", window.current_monitor().unwrap().size());
+    let _webview = WebViewBuilder::new(window)
+        .unwrap()
+        .with_url("https://tauri.studio")
+        .unwrap()
+        .build()
+        .unwrap();
+    event_loop.run(move |event, _, control_flow| {
+        *control_flow = ControlFlow::Wait;
+
+        match event {
+            Event::NewEvents(StartCause::Init) => println!("Wry has started!"),
+            Event::WindowEvent {
+                event: WindowEvent::CloseRequested,
+                ..
+            } => *control_flow = ControlFlow::Exit,
+            _ => (),
+        }
+    });
+}
 fn show_ui() {
     let bars = MultiProgress::new();
     let bar = bars.add(ProgressBar::new(100));
@@ -93,73 +180,73 @@ fn start_server(host: &'static str, port: u16) {
     });
 }
 fn start_backend(wd: &str) {
-    let root_path = PathBuf::from(wd);
-    let mut tmp_path = PathBuf::from(root_path.clone());
-    tmp_path.push("CSV");
-    if !tmp_path.is_dir() {
-        if Confirm::new()
-            .with_prompt("CSV folder not found, Create one?")
-            .default(true)
-            .interact()
-            .unwrap()
-        {
-            create_dir(tmp_path).unwrap();
-        }
-    }
-    let mut tmp_path = PathBuf::from(root_path.clone());
-    tmp_path.push("ERB");
-    if !tmp_path.is_dir() {
-        if Confirm::new()
-            .with_prompt("ERB folder not found, Create one?")
-            .default(true)
-            .interact()
-            .unwrap()
-        {
-            create_dir(tmp_path).unwrap();
-        }
-    }
-    let mut tmp_path = PathBuf::from(root_path.clone());
-    tmp_path.push("emuera.config");
-    if !tmp_path.is_file() {
-        if Confirm::new()
-            .with_prompt("emuera.config file not found, Create one?")
-            .interact()
-            .unwrap()
-        {
-            todo!();
-        }
-    }
-    let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
-    spawn(|| {
-        let mut dirs: VecDeque<PathBuf> = VecDeque::new();
-        fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
-            for entry in read_dir(path).unwrap() {
-                let entry_path = entry.unwrap().path();
-                if entry_path.is_dir() {
-                    dirs.push_back(entry_path);
-                } else {
-                    if ["exe", "config", "csv", "erh", "erb"].contains(
-                        &entry_path
-                            .extension()
-                            .unwrap()
-                            .to_ascii_lowercase()
-                            .to_str()
-                            .unwrap(),
-                    ) {
-                        scaned_files.push_back(entry_path);
-                    }
-                }
-            }
-        }
-        scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
-        while !dirs.is_empty() {
-            let path = dirs.pop_front().unwrap();
-            scan_path(&mut scaned_files, &mut dirs, path);
-        }
-        for file in scaned_files {
-            println!("{:?}", file);
-        }
-    });
+    // let root_path = PathBuf::from(wd);
+    // let mut tmp_path = PathBuf::from(root_path.clone());
+    // tmp_path.push("CSV");
+    // if !tmp_path.is_dir() {
+    //     if Confirm::new()
+    //         .with_prompt("CSV folder not found, Create one?")
+    //         .default(true)
+    //         .interact()
+    //         .unwrap()
+    //     {
+    //         create_dir(tmp_path).unwrap();
+    //     }
+    // }
+    // let mut tmp_path = PathBuf::from(root_path.clone());
+    // tmp_path.push("ERB");
+    // if !tmp_path.is_dir() {
+    //     if Confirm::new()
+    //         .with_prompt("ERB folder not found, Create one?")
+    //         .default(true)
+    //         .interact()
+    //         .unwrap()
+    //     {
+    //         create_dir(tmp_path).unwrap();
+    //     }
+    // }
+    // let mut tmp_path = PathBuf::from(root_path.clone());
+    // tmp_path.push("emuera.config");
+    // if !tmp_path.is_file() {
+    //     if Confirm::new()
+    //         .with_prompt("emuera.config file not found, Create one?")
+    //         .interact()
+    //         .unwrap()
+    //     {
+    //         todo!();
+    //     }
+    // }
+    // let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
+    // spawn(|| {
+    //     let mut dirs: VecDeque<PathBuf> = VecDeque::new();
+    //     fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
+    //         for entry in read_dir(path).unwrap() {
+    //             let entry_path = entry.unwrap().path();
+    //             if entry_path.is_dir() {
+    //                 dirs.push_back(entry_path);
+    //             } else {
+    //                 if ["exe", "config", "csv", "erh", "erb"].contains(
+    //                     &entry_path
+    //                         .extension()
+    //                         .unwrap()
+    //                         .to_ascii_lowercase()
+    //                         .to_str()
+    //                         .unwrap(),
+    //                 ) {
+    //                     scaned_files.push_back(entry_path);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
+    //     while !dirs.is_empty() {
+    //         let path = dirs.pop_front().unwrap();
+    //         scan_path(&mut scaned_files, &mut dirs, path);
+    //     }
+    //     for file in scaned_files {
+    //         println!("{:?}", file);
+    //     }
+    // });
 }
 fn check_folder_structure(wd: &str) {
     let root_path = PathBuf::from(wd);

@@ -15,6 +15,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "d3": "latest",
+    "intro.js": "^4.1.0",
     "lodash": "latest",
     "normalize.css": "latest",
     "vue": "next",
