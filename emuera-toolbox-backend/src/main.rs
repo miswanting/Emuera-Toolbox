@@ -5,7 +5,7 @@ use std::collections::VecDeque;
 use std::fs::{create_dir, read_dir, File};
 use std::io::Read;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::{mpsc, Arc, Mutex};
 use std::thread::{sleep, spawn};
 use std::time::Duration;
 use std::{io::Write, net::TcpListener};
@@ -179,7 +179,7 @@ fn start_server(host: &'static str, port: u16) {
         }
     });
 }
-fn start_backend(wd: &str) {
+fn start_backend(wd: &'static str) {
     let root_path = PathBuf::from(wd);
     let mut tmp_path = PathBuf::from(root_path.clone());
     tmp_path.push("CSV");
@@ -216,14 +216,17 @@ fn start_backend(wd: &str) {
             todo!();
         }
     }
-    let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
-    spawn(|| {
+    //
+    let (sx, rx) = mpsc::channel();
+    spawn(move || {
         let mut dirs: VecDeque<PathBuf> = VecDeque::new();
-        fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
+        let mut scan_path = |path| {
             for entry in read_dir(path).unwrap() {
                 let entry_path = entry.unwrap().path();
                 if entry_path.is_dir() {
-                    dirs.push_back(entry_path);
+                    {
+                        dirs.push_back(entry_path);
+                    }
                 } else {
                     if ["exe", "config", "csv", "erh", "erb"].contains(
                         &entry_path
@@ -233,20 +236,50 @@ fn start_backend(wd: &str) {
                             .to_str()
                             .unwrap(),
                     ) {
-                        scaned_files.push_back(entry_path);
+                        sx.send(entry_path);
                     }
                 }
             }
-        }
-        scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
+        };
+        scan_path(PathBuf::from(wd));
         while !dirs.is_empty() {
             let path = dirs.pop_front().unwrap();
-            scan_path(&mut scaned_files, &mut dirs, path);
-        }
-        for file in scaned_files {
-            println!("{:?}", file);
+            scan_path(path);
         }
     });
+    //
+    // let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
+    // spawn(move || {
+    //     let mut dirs: VecDeque<PathBuf> = VecDeque::new();
+    //     fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
+    //         for entry in read_dir(path).unwrap() {
+    //             let entry_path = entry.unwrap().path();
+    //             if entry_path.is_dir() {
+    //                 dirs.push_back(entry_path);
+    //             } else {
+    //                 if ["exe", "config", "csv", "erh", "erb"].contains(
+    //                     &entry_path
+    //                         .extension()
+    //                         .unwrap()
+    //                         .to_ascii_lowercase()
+    //                         .to_str()
+    //                         .unwrap(),
+    //                 ) {
+    //                     scaned_files.push_back(entry_path);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
+    //     while !dirs.is_empty() {
+    //         let path = dirs.pop_front().unwrap();
+    //         scan_path(&mut scaned_files, &mut dirs, path);
+    //     }
+    //     for file in scaned_files {
+    //         println!("{:?}", file);
+    //     }
+    // });
+    //
 }
 fn check_folder_structure(wd: &str) {
     let root_path = PathBuf::from(wd);
