@@ -26,8 +26,8 @@ fn main() {
     const WORKING_DIRECTORY: &str = "wd";
     // show_ui();
     // start_server(HOST, PORT);
-    create_window();
-    // start_backend(WORKING_DIRECTORY);
+    // create_window();
+    start_backend(WORKING_DIRECTORY);
     // check_folder_structure(WORKING_DIRECTORY);
     // let files = scan_folder(WORKING_DIRECTORY);
     // predict_encoding(files);
@@ -180,73 +180,73 @@ fn start_server(host: &'static str, port: u16) {
     });
 }
 fn start_backend(wd: &str) {
-    // let root_path = PathBuf::from(wd);
-    // let mut tmp_path = PathBuf::from(root_path.clone());
-    // tmp_path.push("CSV");
-    // if !tmp_path.is_dir() {
-    //     if Confirm::new()
-    //         .with_prompt("CSV folder not found, Create one?")
-    //         .default(true)
-    //         .interact()
-    //         .unwrap()
-    //     {
-    //         create_dir(tmp_path).unwrap();
-    //     }
-    // }
-    // let mut tmp_path = PathBuf::from(root_path.clone());
-    // tmp_path.push("ERB");
-    // if !tmp_path.is_dir() {
-    //     if Confirm::new()
-    //         .with_prompt("ERB folder not found, Create one?")
-    //         .default(true)
-    //         .interact()
-    //         .unwrap()
-    //     {
-    //         create_dir(tmp_path).unwrap();
-    //     }
-    // }
-    // let mut tmp_path = PathBuf::from(root_path.clone());
-    // tmp_path.push("emuera.config");
-    // if !tmp_path.is_file() {
-    //     if Confirm::new()
-    //         .with_prompt("emuera.config file not found, Create one?")
-    //         .interact()
-    //         .unwrap()
-    //     {
-    //         todo!();
-    //     }
-    // }
-    // let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
-    // spawn(|| {
-    //     let mut dirs: VecDeque<PathBuf> = VecDeque::new();
-    //     fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
-    //         for entry in read_dir(path).unwrap() {
-    //             let entry_path = entry.unwrap().path();
-    //             if entry_path.is_dir() {
-    //                 dirs.push_back(entry_path);
-    //             } else {
-    //                 if ["exe", "config", "csv", "erh", "erb"].contains(
-    //                     &entry_path
-    //                         .extension()
-    //                         .unwrap()
-    //                         .to_ascii_lowercase()
-    //                         .to_str()
-    //                         .unwrap(),
-    //                 ) {
-    //                     scaned_files.push_back(entry_path);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
-    //     while !dirs.is_empty() {
-    //         let path = dirs.pop_front().unwrap();
-    //         scan_path(&mut scaned_files, &mut dirs, path);
-    //     }
-    //     for file in scaned_files {
-    //         println!("{:?}", file);
-    //     }
-    // });
+    let root_path = PathBuf::from(wd);
+    let mut tmp_path = PathBuf::from(root_path.clone());
+    tmp_path.push("CSV");
+    if !tmp_path.is_dir() {
+        if Confirm::new()
+            .with_prompt("CSV folder not found, Create one?")
+            .default(true)
+            .interact()
+            .unwrap()
+        {
+            create_dir(tmp_path).unwrap();
+        }
+    }
+    let mut tmp_path = PathBuf::from(root_path.clone());
+    tmp_path.push("ERB");
+    if !tmp_path.is_dir() {
+        if Confirm::new()
+            .with_prompt("ERB folder not found, Create one?")
+            .default(true)
+            .interact()
+            .unwrap()
+        {
+            create_dir(tmp_path).unwrap();
+        }
+    }
+    let mut tmp_path = PathBuf::from(root_path.clone());
+    tmp_path.push("emuera.config");
+    if !tmp_path.is_file() {
+        if Confirm::new()
+            .with_prompt("emuera.config file not found, Create one?")
+            .interact()
+            .unwrap()
+        {
+            todo!();
+        }
+    }
+    let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
+    spawn(|| {
+        let mut dirs: VecDeque<PathBuf> = VecDeque::new();
+        fn scan_path(files: &mut Vec<PathBuf>, dirs: &mut VecDeque<PathBuf>, path: PathBuf) {
+            for entry in read_dir(path).unwrap() {
+                let entry_path = entry.unwrap().path();
+                if entry_path.is_dir() {
+                    dirs.push_back(entry_path);
+                } else {
+                    if ["exe", "config", "csv", "erh", "erb"].contains(
+                        &entry_path
+                            .extension()
+                            .unwrap()
+                            .to_ascii_lowercase()
+                            .to_str()
+                            .unwrap(),
+                    ) {
+                        scaned_files.push_back(entry_path);
+                    }
+                }
+            }
+        }
+        scan_path(&mut scaned_files, &mut dirs, PathBuf::from(wd));
+        while !dirs.is_empty() {
+            let path = dirs.pop_front().unwrap();
+            scan_path(&mut scaned_files, &mut dirs, path);
+        }
+        for file in scaned_files {
+            println!("{:?}", file);
+        }
+    });
 }
 fn check_folder_structure(wd: &str) {
     let root_path = PathBuf::from(wd);
