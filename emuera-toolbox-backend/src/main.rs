@@ -1,3 +1,14 @@
+#![warn(missing_docs)]
+// #![deny(missing_doc_code_examples)]
+//! # Emuera Toolbox Backend
+//! - [x] Start Server for FrontEnd.
+//! - [x] Check `CSV` Folder;
+//! - [x] Check `ERB` Folder;
+//! - [x] Check `emuera.config` File;
+//! - [x] Scan `File Paths`;
+//! - [ ] Send `File Paths` to FrontEnd;
+//! - [ ] FrontEnd UI;
+//! - [ ] Display Working Directory Structure;
 use chardetng::EncodingDetector;
 use dialoguer::Confirm;
 use indicatif::{MultiProgress, ProgressBar};
@@ -5,7 +16,7 @@ use std::collections::VecDeque;
 use std::fs::{create_dir, read_dir, File};
 use std::io::Read;
 use std::path::PathBuf;
-use std::sync::{mpsc, Arc, Mutex};
+// use std::sync::{mpsc, Arc, Mutex};
 use std::thread::{sleep, spawn};
 use std::time::Duration;
 use std::{io::Write, net::TcpListener};
@@ -19,13 +30,54 @@ struct Request {
     host: String,
     connection: String,
 }
-
+struct Scanner {
+    folders: VecDeque<PathBuf>,
+    files: VecDeque<PathBuf>,
+}
+impl Scanner {
+    fn new(root: PathBuf) -> Scanner {
+        let mut folders = VecDeque::new();
+        folders.push_back(root);
+        Scanner {
+            folders,
+            files: VecDeque::new(),
+        }
+    }
+}
+impl Iterator for Scanner {
+    type Item = PathBuf;
+    fn next(&mut self) -> Option<Self::Item> {
+        while self.files.is_empty() {
+            if self.folders.is_empty() {
+                return None;
+            } else {
+                let path = self.folders.pop_front().unwrap();
+                for entry in read_dir(path).unwrap() {
+                    let entry_path = entry.unwrap().path();
+                    if entry_path.is_dir() {
+                        self.folders.push_back(entry_path);
+                    } else if ["exe", "config", "csv", "erh", "erb"].contains(
+                        &entry_path
+                            .extension()
+                            .unwrap()
+                            .to_ascii_lowercase()
+                            .to_str()
+                            .unwrap(),
+                    ) {
+                        self.files.push_back(entry_path);
+                    }
+                }
+            }
+        }
+        self.files.pop_front()
+    }
+}
 fn main() {
     const HOST: &str = "localhost";
     const PORT: u16 = 11994;
     const WORKING_DIRECTORY: &str = "wd";
     // show_ui();
-    // start_server(HOST, PORT);
+    start_server(HOST, PORT);
     // create_window();
     start_backend(WORKING_DIRECTORY);
     // check_folder_structure(WORKING_DIRECTORY);
@@ -216,37 +268,45 @@ fn start_backend(wd: &'static str) {
             todo!();
         }
     }
-    //
-    let (sx, rx) = mpsc::channel();
-    spawn(move || {
-        let mut dirs: VecDeque<PathBuf> = VecDeque::new();
-        let mut scan_path = |path| {
-            for entry in read_dir(path).unwrap() {
-                let entry_path = entry.unwrap().path();
-                if entry_path.is_dir() {
-                    {
-                        dirs.push_back(entry_path);
-                    }
-                } else {
-                    if ["exe", "config", "csv", "erh", "erb"].contains(
-                        &entry_path
-                            .extension()
-                            .unwrap()
-                            .to_ascii_lowercase()
-                            .to_str()
-                            .unwrap(),
-                    ) {
-                        sx.send(entry_path);
-                    }
-                }
-            }
-        };
-        scan_path(PathBuf::from(wd));
-        while !dirs.is_empty() {
-            let path = dirs.pop_front().unwrap();
-            scan_path(path);
+    let handle = spawn(move || {
+        let scanner = Scanner::new(PathBuf::from(wd));
+        for each in scanner {
+            println!("{:?}", each);
         }
     });
+    handle.join().unwrap();
+
+    //
+    // let (sx, rx) = mpsc::channel();
+    // spawn(move || {
+    //     let mut dirs: VecDeque<PathBuf> = VecDeque::new();
+    //     let mut scan_path = |path| {
+    //         for entry in read_dir(path).unwrap() {
+    //             let entry_path = entry.unwrap().path();
+    //             if entry_path.is_dir() {
+    //                 {
+    //                     dirs.push_back(entry_path);
+    //                 }
+    //             } else {
+    //                 if ["exe", "config", "csv", "erh", "erb"].contains(
+    //                     &entry_path
+    //                         .extension()
+    //                         .unwrap()
+    //                         .to_ascii_lowercase()
+    //                         .to_str()
+    //                         .unwrap(),
+    //                 ) {
+    //                     sx.send(entry_path);
+    //                 }
+    //             }
+    //         }
+    //     };
+    //     scan_path(PathBuf::from(wd));
+    //     while !dirs.is_empty() {
+    //         let path = dirs.pop_front().unwrap();
+    //         scan_path(path);
+    //     }
+    // });
     //
     // let mut scaned_files: Arc<Mutex<VecDeque<PathBuf>>> = Arc::new(Mutex::new(VecDeque::new()));
     // spawn(move || {
